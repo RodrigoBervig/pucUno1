@@ -1,4 +1,3 @@
-
 public class Card {
 	
 	private String cor;
@@ -7,14 +6,6 @@ public class Card {
 	private boolean special;
 
 	public Card(int valor,String cor) {
-		
-		/*
-		 * constroi uma carta não especial 
-		 * seta a cor e valor numérico
-		 * seta a carta na categoria normal
-		 */
-		
-		
 		this.cor = cor;
 		this.valor = valor;
 		this.valorEsp = 0;
@@ -58,13 +49,11 @@ public class Card {
 	}
 	
 	public String toString() {
-		
-		/*
+	    /*
 		 * Printa a Carta.
 		 * printa [ cor - card value ] se a carta não for especial
 		 * printa [ + value ] se a carta for especial
 		 */
-		
 //		if(!special) {
 //			return "[ "+this.color+"-"+this.value+" ]";
 //		}
@@ -74,60 +63,33 @@ public class Card {
 //			return "[ "+"+"+this.specialValue+" ]"; 
 //		}
 //		return null;
-		
 		String[] card = {" ----- ","|     |","|     |"," ----- "};
 		String c = "";
-		
-		
 		for(int i=0;i<card.length;i++) {
-				
-			for(int j=0;j<1;j++) {
-					
-				if(!this.isSpecial()) {
+		    for(int j=0;j<1;j++) {
+		        if(!this.isSpecial()) {
 					if(i==1) {
-						
 						c = c +"| "+this.getColor()+" |"+" ";
-						
 					}
-					
 					else if(i==2) {
-						
 						c = c + "|  "+this.getValue()+"  |"+" ";
 					}
-					
 					else {
 						c = c + card[i]+" "; 
 					}
-					
-					}
-				
+		        }
 				else if(this.isSpecial()) {
-					
 					if(i==1) {
-						
 						c = c +"| "+"+"+this.getValue()+"  |"+" ";
-						
 					}
 					else {
 						c = c + card[i]+" ";
 					}
-					
-				}
-				
-					}
-				
-				c +="\n";
-				
-			}
-				
-		
-		
-		
+		        }
+		    }
+		    c +="\n";
+		}
 		return c;
-		
-		
-		
-		
 	}
 	
 	public boolean isSpecial() {
@@ -136,13 +98,7 @@ public class Card {
 		 * retorna true se a carta for especial
 		 * retorna true se a carta não for especial
 		 */
-		
-		
-		if(special) {
-			return true;
-		}
-		
-		return false;
+		return special;
 	}
 	
 	
