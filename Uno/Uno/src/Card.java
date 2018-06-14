@@ -1,54 +1,61 @@
 public class Card {
-	
-	private String cor;
+    private String cor;
 	private int valor;
 	private int valorEsp;
 	private boolean special;
 
 	public Card(int valor,String cor) {
-		this.cor = cor;
-		this.valor = valor;
+		setCor(cor);
+		setValor(valor);
 		this.valorEsp = 0;
-		this.special = false;
+		//this.special = false; Java já starta valores booleanos com False
 	}
-	
-	
-	public Card(int valorEsp) { // Construtor para cartas especiais como +4 e +2	
-		
-		/*
-		 * designa o valor especial para a a carta
-		 * seta a carta na categoria especiais
-		 */
-		
-		this.cor="";
-		this.valorEsp = valorEsp;
+
+	/** Método construtor para cartas especiais(+2 e +4)*/
+	public Card(int valorEsp) {
+	    this.cor="";
+		setValorEsp(valorEsp);
 		this.valor = 0;
-		this.special = true;
+		setSpecial(); //Seta a Carta na categoria especiais.
 	}
-	
-	public String getColor() {
-		/*
-		 * Retorna a cor da carta
-		 */
-		
-		return this.cor;
+
+    public void setCor(String cor) {
+        if(cor.equalsIgnoreCase("vermelho") || cor.equalsIgnoreCase("azul") ||
+           cor.equalsIgnoreCase("verde") || cor.equalsIgnoreCase("amarelo" ))
+            this.cor = cor;
+    }
+    public void setValor(int valor){
+        if(valor >= 0 && valor <=9) this.valor = valor;
+    }
+    public void setValorEsp(int valorEsp) {
+        if(valorEsp == 2 || valorEsp == 4)this.valorEsp = valorEsp;
+    }
+    /** Troca o valor booleano de special*/
+    public void setSpecial(){
+	    this.special = !special;
+    }
+
+    /** Retorna a cor da carta*/
+    public String getColor(){
+	    return this.cor;
 	}
-	
-	public int getValue() {
-		
-		/*
-		 * retorna o valor numérico da carta
-		 */
-		
-		if(!this.special) {
+	/** Retorna o valor da Carta*/
+	public int getValue(){
+	    if(!this.special) {
 		return this.valor;}
-		
 		else {
 			return this.valorEsp;
 		}
 	}
-	
-	public String toString() {
+    public int getValorEsp() {
+        return valorEsp;
+    }
+    /** Método que checa se a carta é especial. True se for; False se não for. */
+    public boolean isSpecial() { //Como se fosse GetSpecial()
+        return special;
+    }
+
+    public String toString() {
 	    /*
 		 * Printa a Carta.
 		 * printa [ cor - card value ] se a carta não for especial
@@ -57,52 +64,43 @@ public class Card {
 //		if(!special) {
 //			return "[ "+this.color+"-"+this.value+" ]";
 //		}
-//		
 //		else if(special){
-//			
 //			return "[ "+"+"+this.specialValue+" ]"; 
 //		}
 //		return null;
-		String[] card = {" ----- ","|     |","|     |"," ----- "};
+        StringBuffer sb = new StringBuffer();
+		String[] card = {" ----- ", "|     |", "|     |", " ----- "};
 		String c = "";
-		for(int i=0;i<card.length;i++) {
+		for(int i=0; i<card.length; i++) {
 		    for(int j=0;j<1;j++) {
 		        if(!this.isSpecial()) {
-					if(i==1) {
-						c = c +"| "+this.getColor()+" |"+" ";
+					if(i==1){
+						sb.append(c).append("| ").append(this.getColor()).append(" |").append(" ");
+                       //  c = c +"| "+this.getColor()+" |"+" ";
 					}
-					else if(i==2) {
-						c = c + "|  "+this.getValue()+"  |"+" ";
+					else if(i==2){
+                        sb.append(c).append("| ").append(this.getValue()).append(" |").append(" ");
+                        //c = c + "|  "+this.getValue()+"  |"+" ";
 					}
-					else {
-						c = c + card[i]+" "; 
+					else{
+					    sb.append(c).append(card[i]).append(" ");
+                        //c = c + card[i]+" ";
 					}
 		        }
-				else if(this.isSpecial()) {
-					if(i==1) {
-						c = c +"| "+"+"+this.getValue()+"  |"+" ";
+				else if(this.isSpecial()){
+					if(i==1){
+                        sb.append(c).append("| ").append(this.getValue()).append(" |").append(" ");
+                        //c = c +"| "+"+"+this.getValue()+"  |"+" ";
 					}
-					else {
-						c = c + card[i]+" ";
+					else{
+                        sb.append(c).append(card[i]).append(" ");
+                        //c = c + card[i]+" ";
 					}
 		        }
 		    }
-		    c +="\n";
+		    sb.append(c).append("\n");
+            //c +="\n";
 		}
-		return c;
+		return sb.toString();
 	}
-	
-	public boolean isSpecial() {
-		
-		/*
-		 * retorna true se a carta for especial
-		 * retorna true se a carta não for especial
-		 */
-		return special;
-	}
-	
-	
-	
-	
-	
 }

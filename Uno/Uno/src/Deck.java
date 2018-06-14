@@ -67,14 +67,11 @@ public class Deck {
 		}
 		
 		public Card getTopCard() {
-			/* Recebe a carta mais alte de um baralho invertido
-			 
-			 */
+			//Recebe a carta mais alte de um baralho invertido
 			return deck.remove(deck.size()-1);
 		}
 		
 		public Card peek() {
-			
 			return deck.get(deck.size()-1);
 		}
 		
