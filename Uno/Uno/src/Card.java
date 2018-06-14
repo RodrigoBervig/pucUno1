@@ -68,7 +68,7 @@ public class Card {
 //			return "[ "+"+"+this.specialValue+" ]"; 
 //		}
 //		return null;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 		String[] card = {" ----- ", "|     |", "|     |", " ----- "};
 		String c = "";
 		for(int i=0; i<card.length; i++) {
