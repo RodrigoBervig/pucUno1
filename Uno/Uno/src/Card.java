@@ -43,20 +43,20 @@ public class Card {
         }
 	}
 
-    public void setCor(int cor) {
+    private void setCor(int cor) {
         if(cor >= 0 && cor <= 4)
             this.cor = cor;
     }
 
-    public void setValor(int valor){
+    private void setValor(int valor){
         if(valor >= 0 && valor <=9) this.valor = valor;
     }
 
-    public void setValorEsp(int valorEsp) {
+    private void setValorEsp(int valorEsp) {
         if(valorEsp >= 0 && valorEsp <= 4) this.valorEsp = valorEsp;
     }
 
-    public void setSpecial(boolean special){
+    private void setSpecial(boolean special){
 	    this.special = special;
     }
 
@@ -83,8 +83,19 @@ public class Card {
         return this.valor;
 	}
 
+	public String getValueString()
+    {
+        StringBuilder sb = new StringBuilder();
+        if(special)
+            if (valorEsp == 2 || valorEsp == 4) sb.append("+").append(valorEsp).append(" ");
+            else sb.append(" ").append(valorEsp).append(" ");
+        else sb.append(" ").append(valor).append(" ");
+
+        return sb.toString();
+    }
+
     /** Método que checa se a carta é especial. True se for; False se não for. */
-    public boolean isSpecial() { //Como se fosse GetSpecial()
+    public boolean isSpecial() { //Como se fosse getSpecial()
         return special;
     }
 
@@ -93,7 +104,7 @@ public class Card {
 
 		sb.append(" ----- \n");
 		sb.append("| ").append(this.getColorString()).append(" |").append(" \n");
-        sb.append("| ").append(this.getValue()).append(" |").append(" \n");
+        sb.append("| ").append(this.getValueString()).append(" |").append(" \n");
 		sb.append(" ----- \n");
 
 		return sb.toString();

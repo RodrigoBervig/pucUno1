@@ -69,88 +69,61 @@ public class Player {
 			s.nextLine();
 		}
 	}
-	
-	
+
+	/**
+	  * Isso é uma representação gráfica de uma carta
+	  * apenas para fazer as cartas ficarem um pouco mais parecidas com cartas hahaha
+	  * usado no método showboard() na classe Uno
+	  **/
 	public void showCards() {
-		/*
-		 * Isso é uma representação gráfica de uma carta		 
-		 * apenas para fazer as cartas ficarem um pouco mais parecidas com cartas hahaha		 
-		 * usado no método showboard() na classe Uno 
-		 */
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append(" -----  ");
+		sb.append("\n");
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append("| ").append(this.playercards.get(i).getColorString()).append(" | ");
+		sb.append("\n");
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append("| ").append(this.playercards.get(i).getValueString()).append(" | ");
+		sb.append("\n");
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append(" -----  ");
+		sb.append("\n");
 		
-		String[] card = {" ----- ","|     |","|     |"," ----- "};
-		String c = "";
-		
-		
-		for(int i=0;i<card.length;i++) {
-				
-			for(int j=0;j<playercards.size();j++) {
-					
-				if(!playercards.get(j).isSpecial()) {
-					if(i==1) {
-						
-						c = c +"| "+playercards.get(j).getColor()+" |"+" ";
-						
-					}
-					
-					else if(i==2) {
-						
-						c = c + "|  "+playercards.get(j).getValue()+"  |"+" ";
-					}
-					
-					else {
-						c = c + card[i]+" "; 
-					}
-					
-					}
-				
-				else if(playercards.get(j).isSpecial()) {
-					
-					if(i==1) {
-						
-						c = c +"| "+"+"+playercards.get(j).getValue()+"  |"+" ";
-						
-					}
-					else {
-						c = c + card[i]+" ";
-					}
-					
-				}
-				
-					}
-				
-				c +="\n";
-				
-			}
-				
-		
-		
-		
-		System.out.print(c);
+		System.out.print(sb.toString());
 	}
-	
+
+	/**
+	  * esconde cartas do jogador
+	  * usado no método showboard() na classe Uno
+	  **/
 	public void hideCards() {
-		
-		/*
-		 * esconde cartas do jogador		 
-		 * usado no método showboard() na classe Uno 
-		 */
-		
-		String[] card = {" ----- ","|     |","|     |"," ----- "};
-		String c = "";
-		
-		
-		for(int i=0;i<card.length;i++) {
-				
-			for(int j=0;j<playercards.size();j++) {
-		
-				c = c + card[i]+" ";
-		
-			}
-		c+="\n";
-		}
-		
-		System.out.print(c);
+
+
+
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append(" -----  ");
+		sb.append("\n");
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append("|     | ");
+		sb.append("\n");
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append("|     | ");
+		sb.append("\n");
+
+		for (int i = 0; i < playercards.size(); i++)
+			sb.append(" -----  ");
+		sb.append("\n");
+
+		System.out.print(sb.toString());
 	}
 	
 	public boolean hasWon() {

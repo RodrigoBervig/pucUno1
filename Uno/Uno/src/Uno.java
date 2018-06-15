@@ -48,7 +48,7 @@ public class Uno {
 	}
 	
 	
-private void distributecards() {
+	private void distributecards() {
 		//este método distribui cartas entre os jogadores
 		for(int i=0;i<10;i++) {
 			
