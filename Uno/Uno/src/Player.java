@@ -102,9 +102,6 @@ public class Player {
 	  * usado no método showboard() na classe Uno
 	  **/
 	public void hideCards() {
-
-
-
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < playercards.size(); i++)
