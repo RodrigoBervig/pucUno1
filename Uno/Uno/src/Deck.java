@@ -15,6 +15,7 @@ public class Deck
          */
 		public Deck() {
             deck = new Card[108];
+            numCards = 0;
 		}
 
 		public void inicializa()
@@ -41,17 +42,18 @@ public class Deck
                 }
             }
 
+
             // cartas especiais com cores
-		    for (int i = 0; i <= 4; i++) {
-                for (int j = 0; j <= 3; j++) {
+		    for (int i = 1; i <= 4; i++) {
+                for (int j = 0; j <= 2; j++) {
                     addToDeck(new Card(j, i, true));
                     addToDeck(new Card(j, i, true));
                 }
             }
 
             //cartas especiais sem cores
-            for (int i = 0; i < 4; i++) addToDeck(new Card(3, 0,true));
-            for (int i = 0; i < 4; i++) addToDeck(new Card(4, 0,true));
+            for (int i = 1; i <= 4; i++) addToDeck(new Card(3, 0,true));
+            for (int i = 1; i <= 4; i++) addToDeck(new Card(4, 0,true));
         }
 
 		/** Checa o tamanho do deck, se for maior que zero, retorna false,

@@ -60,8 +60,8 @@ public class Player
 		 */
 		Scanner s = new Scanner(System.in);
 		
-		if (playercards.size()==1){
-			
+		if (playercards.size()==1)
+		{
 			System.out.println("Uno");
 			System.out.println("Pressione Enter...");
 			s.nextLine();

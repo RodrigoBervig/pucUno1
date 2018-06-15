@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Uno
@@ -67,23 +66,21 @@ public class Uno
 			
 		}
 	}
-	
-	
-	
+
+
+    /**
+     *  este metodo pega o jogador atual como parametro
+     *  esse método contem o processo do jogo
+     */
 	public void playGame(Player p) {
-		/*	 este metodo pega o jogador atual como parametro
-			 esse método contem o processo do jogo
-		*/
-		
 		decorate();
 		System.out.println(p+", É seu turno\nA carta atual na mesa é:\n"+current);
-		
 		decorate();
 		showBoard(p);
 		decorate();
 		
 		if(current.isSpecial()) {
-			penalty+=current.getValue();
+			penalty += current.getValue();
 			Card pick;
 			if(!canOverride(p)) {
 				System.out.println("Você não tem nenhuma carta para jogar contra a carta especial atual, sendo assim você sofrerá a penalização");
@@ -104,38 +101,26 @@ public class Uno
 				current = deck.getTopCard();
 				System.out.println("A nova carta na mesa é: \n"+current);
 			}
-			
-			
-			}
-			
-//		}   
-		
-		
-	
-		
-	
-		if(!hasColor(p) && !hasValue(p) && !hasSpecial(p)) {
-				Card pick=null;	
-				System.out.println("Você não possui nenhuma carta valida para jogar, então tera de comprar cartas.");
-				while(!hasColor(p) && !hasValue(p) && !hasSpecial(p)) {
-					
-					pause();
-					pick = deck.getTopCard();
-					p.pickCards(pick);
-					System.out.println("Você comprou:\n"+pick);
-					
-				}
-				
-				System.out.println("Você comprou uma carta valida!");
+		}
+
+        if(!hasColor(p) && !hasValue(p) && !hasSpecial(p))
+        {
+            Card pick;
+		    System.out.println("Você não possui nenhuma carta valida para jogar, então tera de comprar cartas.");
+		    while(!hasColor(p) && !hasValue(p) && !hasSpecial(p))
+            {
 				pause();
-				System.out.println("Você possui as seguintes cartas: ");
-				p.showCards();
-			}
-			
-	
-		
-		
-		
+				pick = deck.getTopCard();
+				p.pickCards(pick);
+				System.out.println("Você comprou:\n"+pick);
+            }
+				
+            System.out.println("Você comprou uma carta valida!");
+			pause();
+			System.out.println("Você possui as seguintes cartas: ");
+			p.showCards();
+        }
+
 		System.out.println("Por favor, escolha uma carta:");
 		pick = choice.nextInt()-1;
 		//System.out.println(pick);
@@ -152,7 +137,6 @@ public class Uno
 		p.sayUno();
 		current = play;
 		cardpile.addToDeck(current);
-		//reviveDeck();
 	}
 	
 	
