@@ -175,7 +175,7 @@ private void distributecards() {
 		if(choice <= p.PlayerCards().size()) {
 			//add for special
 			
-			if(p.PlayerCards().get(choice).getColor().equals(current.getColor()) || p.PlayerCards().get(choice).getValue()==current.getValue() || p.PlayerCards().get(choice).isSpecial()) {
+			if(p.PlayerCards().get(choice).getColor() == current.getColor() || p.PlayerCards().get(choice).getValue()==current.getValue() || p.PlayerCards().get(choice).isSpecial()) {
 				return true;
 			}
 			
@@ -204,7 +204,7 @@ private void distributecards() {
 		 */
 		for(Card c:p.PlayerCards()) {
 			
-			if(c.getColor().equals(current.getColor())) {
+			if(c.getColor() == current.getColor()) {
 				return true;
 			}
 			
