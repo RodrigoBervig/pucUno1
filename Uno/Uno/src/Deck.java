@@ -1,82 +1,110 @@
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Random;
 
-public class Deck {
-
-	private ArrayList<Card> deck;
-	
+/**
+ * Implementa um deck de cartas.
+ */
+public class Deck
+{
+	private Card[] deck;
+	private int numCards;
+	    /**
+         * O construtor cria um novo deck
+         * Existem 4 cores: vermelho, azul, verde e amarelo
+         * cada cor tem 2 cópias da mesma carta, exceto pelo 0 (aparece apenas um vez por cor)
+         * Por exemplo: Verde tem duas cartas de numero 1, mas apenas uma de numero 0
+         */
 		public Deck() {
-		    /*
-			 * O construtor cria um novo deck 			
-			 * Existem 4 cores: vermelho, azul, verde e amarelo			 
-			 * cada cor tem 2 cópias da mesma carta, exceto pelo 0 (aparece apenas um vez por cor)			 
-			 * Por exemplo: Verde tem duas cartas de numero 1, mas apenas uma de numero 0			 
-			 */
-            deck = new ArrayList<>();
-			preenche(deck);
+            deck = new Card[108];
 		}
 
-		public void preenche(ArrayList<Card> deck) {
+		public void inicializa()
+        {
+            preenche();
+            shuffle();
+        }
+
+		public void addToDeck(Card card)
+        {
+            this.deck[numCards] = card;
+            numCards++;
+        }
+
+		private void preenche() {
             // cartas normais
-            for (int i = 1; i <= 4; i++) {
-                    deck.add(new Card(0, i, false));
-                for (int j = 1; j <= 9; j++) {
-                    deck.add(new Card(j, i, false));
-                    deck.add(new Card(j, i, false));
+            for (int i = 1; i <= 4; i++)
+            {
+                addToDeck(new Card(0, i, false));
+                for (int j = 1; j <= 9; j++)
+                {
+                    addToDeck(new Card(j, i, false));
+                    addToDeck(new Card(j, i, false));
                 }
             }
 
             // cartas especiais com cores
 		    for (int i = 0; i <= 4; i++) {
                 for (int j = 0; j <= 3; j++) {
-                    deck.add(new Card(j, i, true));
-                    deck.add(new Card(j, i, true));
+                    addToDeck(new Card(j, i, true));
+                    addToDeck(new Card(j, i, true));
                 }
             }
 
             //cartas especiais sem cores
-            for (int i = 0; i < 4; i++) deck.add(new Card(3, 0,true));
-            for (int i = 0; i < 4; i++) deck.add(new Card(4, 0,true));
+            for (int i = 0; i < 4; i++) addToDeck(new Card(3, 0,true));
+            for (int i = 0; i < 4; i++) addToDeck(new Card(4, 0,true));
         }
 
-
-
-		
-		public Deck(ArrayList<Card> c){ //construtor overloaded
-			/*Em caso de o deck atual ficar vazio, todas as cartas jogadas são coletadas e se tornam o novo deck;*/
-			deck = c;
-		}
-
-		/** Checa o tamanho do deck, se for maior que zero, retorna false, se não, retorna true.*/
+		/** Checa o tamanho do deck, se for maior que zero, retorna false,
+         *  se não, retorna true.
+         */
 		public boolean isEmpty() { //
-		    return (deck.size()>0);
+		    return numCards>0;
 		}
 
 		/** Embaralha o deck*/
 		public void shuffle(){
-		    Collections.shuffle(deck);
+		    Random rd = new Random();
+		    int i, j;
+
+		    for (int k = 0; k < 1000; k++)
+            {
+                i = rd.nextInt(108);
+                j = rd.nextInt(108);
+                swap(i, j);
+            }
 		}
+
+		private void swap (int i, int j)
+        {
+            Card aux = deck[i];
+            deck[i] = deck[j];
+            deck[j] = aux;
+        }
+
         /**Recebe a carta mais alta de um baralho invertido*/
-		public Card getTopCard(){
-			return deck.remove(deck.size()-1);
+		public Card getTopCard()
+        {
+            if (numCards <= 0) return null;
+
+            Card c = deck[numCards - 1];
+            deck[numCards - 1] = null;
+            return c;
 		}
 		
 		public Card peek() {
-			return deck.get(deck.size()-1);
+		    if (numCards <= 0) return null;
+			return deck[numCards-1];
 		}
-		
-		
+
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
-			String deck="";
-			
-			for(Card c:this.deck){ //igual a for(int i = 0; i<deck.length; i++)
-				sb.append(deck).append(c);
-			    //deck = deck +c+ " ";
+
+			for(Card c:this.deck)
+            {
+				sb.append(c);
 			}
 
 			return sb.toString();
-			
 		}
 		
 		

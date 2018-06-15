@@ -2,10 +2,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
-public class Player {
-
-	
-	
+public class Player
+{
 	private ArrayList<Card> playercards; 
 	private String nome; //nome do jogador
 	
@@ -122,21 +120,23 @@ public class Player {
 
 		System.out.print(sb.toString());
 	}
-	
+
+	/**
+	 * verifica se o jogador venceu ou não
+	 */
 	public boolean hasWon() {
-		/*
-		 * verifica se o jogador venceu ou não
-		 */
-		if(playercards.size()==0) {
-			return true;
-		}
-		return false;
+
+		return playercards.size()==0;
+
 	}
-	
+
+
+
+	/**
+	 * Representação do jogador em texto
+	 */
 	public String toString() {
-		/*
-		 * representação do jogador em texto
-		 */
+
 		return this.nome;
 	}
 	

@@ -1,27 +1,31 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Uno {
-
+public class Uno
+{
 	private Card current; //a carta atual ou carta anterior do jogador ou carta inicial
 	private Deck deck; // o deck do jogo
-	private ArrayList<Card> cardpile; //quando os jogadores jogam uma carta, ela é empilhada aqui, também, cria um novo deck quando o deck atual estiver vazio
+	private Deck cardpile; //quando os jogadores jogam uma carta, ela é empilhada aqui, também, cria um novo deck quando o deck atual estiver vazio
 	private int penalty; // quando cartas especiais são acumuladas  a penalidade acumula, se um jogador não tiver como counterar a carta especial atual, o jogador é penalizado
 	private Scanner choice;
-	private Player p1,p2; //player 1 and 2
+	private Player p1, p2; //player 1 and 2
 	private int pick; // players pick
-	
+
+    /**
+     * construtor
+     * constroi o jogo
+     * prepara o jogo para jogar
+     */
 	public Uno() {
-		/*construtor
-		 * constroi o jogo
-		 * prepara o jogo para jogar
-		 */
+
 		deck = new Deck();
-		deck.shuffle();
+		deck.inicializa();
+
 		penalty = 0;
 		current = getStartingCard();
-		cardpile = new ArrayList<Card>();
-		cardpile.add(current);
+
+		cardpile = new Deck();
+		cardpile.addToDeck(current);
 		choice = new Scanner(System.in);
 		p1 = new Player("Jogador 1");
 		p2 = new Player("Jogador 2");
@@ -29,13 +33,13 @@ public class Uno {
 		
 	
 	}
-	
-	
-	
+
+
+	/**
+	 *  esse método simula turnos entre os dois jogadores. quando o turno é par, jogar 1 joga, quando o turno é impar jogador 2 joga.
+	 *  this method simulates turns between the two players. when turn is even, player 1 plays and when
+     */
 	public void game() {
-			/* esse método simula turnos entre os dois jogadores. quando o turno é par, jogar 1 joga, quando o turno é impar jogador 2 joga. 
-			this method simulates turns between the two players. when turn is even, player 1 plays and when 			   
-			*/	
 		int turn=0;
 		while(!gameOver(p1,p2)) {
 			if(turn%2==0) {
@@ -86,7 +90,9 @@ public class Uno {
 				for(int i=0;i<penalty;i++) {
 
 					if(deck.isEmpty()) {
-						deck = new Deck(cardpile);
+						deck = cardpile;
+						deck.shuffle();
+						cardpile = new Deck();
 					}
 					pick = deck.getTopCard();
 					p.pickCards(pick);
@@ -145,14 +151,12 @@ public class Uno {
 		
 		p.sayUno();
 		current = play;
-		cardpile.add(current);
+		cardpile.addToDeck(current);
 		//reviveDeck();
 	}
 	
 	
 	private boolean hasSpecial(Player p) {
-		// TODO Auto-generated method stub
-		
 		for(Card c:p.PlayerCards()) {
 			
 			if(c.isSpecial()) {
@@ -266,10 +270,7 @@ public class Uno {
 	
 	private Card getStartingCard() {
 		
-		/*
-		 * Pega uma carta inicial válida 		 
-		 * Carta inicial não pode ser uma carta especial		 
-		 */
+
 		
 		Card temp = deck.peek();
 		while(temp.isSpecial()) {

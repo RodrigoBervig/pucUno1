@@ -1,7 +1,8 @@
 /**
  * Essa classe implementa uma carta de UNO.
  */
-public class Card {
+public class Card
+{
     private int cor;
 	private int valor;
 	private int valorEsp;
