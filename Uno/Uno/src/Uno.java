@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Uno
 {
@@ -35,7 +36,8 @@ public class Uno
 	 *  esse método simula turnos entre os dois jogadores. quando o turno é par, jogar 1 joga, quando o turno é impar jogador 2 joga.
 	 *  this method simulates turns between the two players. when turn is even, player 1 plays and when
      */
-	public void game() {
+	public void game() throws IOException, InterruptedException
+    {
 		int turn = 0;
 		do
         {
@@ -60,7 +62,7 @@ public class Uno
      *  este metodo pega o jogador atual como parametro
      *  esse método contem o processo do jogo
      */
-	public void playGame(Player p)
+	public void playGame(Player p) throws IOException, InterruptedException
     {
         Scanner choice = new Scanner(System.in);
 
@@ -78,6 +80,7 @@ public class Uno
 				compra(p, penalty);
 				penalty = 0;
 				current = deck.getTopCard();
+				pause();
 				showBoard(p);
 				pause();
 				return;
@@ -221,8 +224,9 @@ public class Uno
         return false;
     }
 
-    public void showBoard(Player p)
+    public void showBoard(Player p) throws IOException, InterruptedException
     {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
         decorate();
         System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+current);
         decorate();
