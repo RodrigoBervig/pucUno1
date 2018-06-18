@@ -39,10 +39,17 @@ public class Uno
 	public void game() throws IOException, InterruptedException
     {
 		int turn = 0;
+		Player currentPlayer;
 		do
         {
-            if(turn%2==0) playGame(p1);
-			else playGame(p2);
+            if(turn%2==0) currentPlayer = p1;
+            else currentPlayer = p2;
+
+            cls();
+            System.out.println("Proximo jogador: \n\n\n\n\n\n" + currentPlayer.getName());
+            pause();
+
+            playGame(currentPlayer);
 			turn++;
 		} while(!gameOver(p1,p2));
 	}
@@ -80,9 +87,7 @@ public class Uno
 				compra(p, penalty);
 				penalty = 0;
 				current = deck.getTopCard();
-				pause();
 				showBoard(p);
-				pause();
 				return;
 			}
 		}
@@ -136,7 +141,8 @@ public class Uno
      * pergunta ao usuario se deseja continuar
      * feito apenas para aumentar a interatividade com o usuário
      */
-	private void pause() {
+	private void pause()
+    {
 	    Scanner in = new Scanner(System.in);
 	    String opcao;
 
@@ -226,7 +232,7 @@ public class Uno
 
     public void showBoard(Player p) throws IOException, InterruptedException
     {
-        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        cls();
         decorate();
         System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+current);
         decorate();
@@ -234,7 +240,7 @@ public class Uno
 	    decorate();
     }
 
-    private void showCards (Player p)
+    private void showCards (Player p) throws IOException, InterruptedException
     {
         if(p == p1) {
             System.out.println("                Jogador 1");
@@ -249,5 +255,10 @@ public class Uno
             p2.showCards();
             System.out.println("                Jogador 2\n");
         }
+    }
+
+    private void cls() throws IOException, InterruptedException
+    {
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 }
