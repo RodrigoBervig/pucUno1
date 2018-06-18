@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.Scanner;
-
 
 public class Player
 {
@@ -42,12 +40,10 @@ public class Player
         Card c = playercards[i];
         playercards[i] = null;
 
-        for (int k = i; k < numCards - 1; k++)
-        {
-            playercards[k] = playercards[k+1];
-        }
-
-        numCards--;
+        if (i != numCards - 1)
+            System.arraycopy(playercards, i + 1, playercards, i, numCards - 1 - i);
+        this.numCards--;
+        playercards[numCards] = null;
 
         return c;
     }
