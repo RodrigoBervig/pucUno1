@@ -93,6 +93,7 @@ public class Card
 
 	public boolean canPutThisAbove (Card below)
     {
+        if (below == null) return false;
         if (this.isCoringa()) return true;
         return below.getColor() == this.getColor() || this.getValue() == below.getValue();
     }

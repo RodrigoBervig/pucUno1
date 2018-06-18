@@ -103,7 +103,12 @@ public class Uno
             pickchoice = choice.nextInt()-1;
         }
 
-        if (pickchoice == -1) compra(p, 1);
+        if (pickchoice == -1)
+        {
+            compra(p, 1);
+            showBoard(p);
+            pause();
+        }
         else
         {
             Card play = p.remove(pickchoice);
@@ -133,7 +138,8 @@ public class Uno
 	private boolean isValidChoice(Player p,int choice)
     {
         if (choice == -1) return true;
-		return p.cardAt(choice).canPutThisAbove(current);
+        if (choice < 0 || choice >= p.getNumCards()) return false;
+        return p.cardAt(choice).canPutThisAbove(current);
 	}
 
     /**
