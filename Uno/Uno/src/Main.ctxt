@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=Main
+comment0.text=\r\n\ Felipe\ Bach\r\n\ 10/06/2018\r\n\ Jogo\ Uno\ Simples,\ para\ dois\ jogadores\r\n
+comment1.params=args
+comment1.target=void\ main(java.lang.String[])
+comment1.text=\r\n\ Main\ apenas\ roda\ o\ jogo\ chamando\ o\ m\u00C3\u00A9todo\ game.\r\n\ Metodo\ game\ esta\ na\ classe\ Uno.\r\n
+numComments=2
