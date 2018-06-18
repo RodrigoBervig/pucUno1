@@ -29,8 +29,6 @@ public class Uno
 		p1 = new Player("Jogador 1");
 		p2 = new Player("Jogador 2");
 		distributecards();
-		
-	
 	}
 
 
@@ -39,31 +37,23 @@ public class Uno
 	 *  this method simulates turns between the two players. when turn is even, player 1 plays and when
      */
 	public void game() {
-		int turn=0;
-		while(!gameOver(p1,p2)) {
+		int turn = 0;
+		do {
 			if(turn%2==0) {
 			playGame(p1);}
 			else {
 			playGame(p2);}
 			turn++;
-		}
-		
+		} while(!gameOver(p1,p2));
 	}
 	
 	
-	private void distributecards() {
-		//este método distribui cartas entre os jogadores
-		for(int i=0;i<10;i++) {
-			
-			if(i%2==0) {
-				p1.pickCards(deck.getTopCard());
-			}
-			
-			else {
-				p2.pickCards(deck.getTopCard());
-			}
-			
-			
+	private void distributecards()
+    {
+		for(int i=0;i<7;i++)
+		{
+            p1.pickCards(deck.getTopCard());
+            p2.pickCards(deck.getTopCard());
 		}
 	}
 
@@ -73,70 +63,47 @@ public class Uno
      *  esse método contem o processo do jogo
      */
 	public void playGame(Player p) {
-		decorate();
-		System.out.println(p+", É seu turno\nA carta atual na mesa é:\n"+current);
-		decorate();
 		showBoard(p);
-		decorate();
-		
-		if(current.isSpecial()) {
-			penalty += current.getValue();
-			Card pick;
+		int pickchoice;
+
+		if(current.getPenalty() > 0)
+		{
+            penalty += current.getPenalty();
+
 			if(!canOverride(p)) {
 				System.out.println("Você não tem nenhuma carta para jogar contra a carta especial atual, sendo assim você sofrerá a penalização");
-				for(int i=0;i<penalty;i++) {
-
-					if(deck.isEmpty()) {
-						deck = cardpile;
-						deck.shuffle();
-						cardpile = new Deck();
-					}
-					pick = deck.getTopCard();
-					p.pickCards(pick);
-					System.out.println("Você escolheu: \n"+pick);
-					pause();
-					
-				}
+				compra(p, penalty);
 				penalty = 0;
 				current = deck.getTopCard();
-				System.out.println("A nova carta na mesa é: \n"+current);
 			}
 		}
-
-        if(!hasColor(p) && !hasValue(p) && !hasSpecial(p))
+        else
         {
-            Card pick;
-		    System.out.println("Você não possui nenhuma carta valida para jogar, então tera de comprar cartas.");
-		    while(!hasColor(p) && !hasValue(p) && !hasSpecial(p))
-            {
-				pause();
-				pick = deck.getTopCard();
-				p.pickCards(pick);
-				System.out.println("Você comprou:\n"+pick);
-            }
-				
-            System.out.println("Você comprou uma carta valida!");
-			pause();
-			System.out.println("Você possui as seguintes cartas: ");
-			p.showCards();
-        }
+            if (!p.hasCardToPutAbove(current))
+                System.out.println("Você não possui nenhuma carta valida para jogar, então tera de comprar cartas.");
+            System.out.println("Por favor, escolha uma carta (digite zero para comprar): ");
 
-		System.out.println("Por favor, escolha uma carta:");
-		pick = choice.nextInt()-1;
-		//System.out.println(pick);
-		
-		while(!isValidChoice(p,pick)) {
-			
-			System.out.println("Escolha invalida, por favor, selecione uma carta valida.");
-			pick = choice.nextInt()-1;
-			
-		}
-		
-		Card play = p.throwCard(pick);
-		
-		p.sayUno();
-		current = play;
-		cardpile.addToDeck(current);
+            pickchoice = choice.nextInt()-1;
+
+
+            while(!isValidChoice(p,pickchoice)) {
+                System.out.println("Escolha invalida! Por favor, tente novamente: ");
+                pickchoice = choice.nextInt()-1;
+            }
+
+            if (pickchoice == -1)
+            {
+                compra(p, 1);
+            }
+            else
+            {
+                Card play = p.throwCard(pickchoice);
+                p.sayUno();
+                current = play;
+                cardpile.addToDeck(current);
+            }
+
+        }
 	}
 	
 	
@@ -153,24 +120,14 @@ public class Uno
 		return false;
 	}
 
-	private boolean isValidChoice(Player p,int choice) {
-		
-		/*
-		 * Verifica se a escolha do jogador foi valida ou não		 
-		 * para ser uma escolha valida: o jogador deve possuir a carta, a carta deve possuir o mesmo valor ou cor que a carta atual.		 
-		 */
-		
-		if(choice <= p.PlayerCards().size()) {
-			//add for special
-			
-			if(p.PlayerCards().get(choice).getColor() == current.getColor() || p.PlayerCards().get(choice).getValue()==current.getValue() || p.PlayerCards().get(choice).isSpecial()) {
-				return true;
-			}
-			
-			
-		}
-		
-		return false;
+    /**
+     * Verifica se a escolha do jogador foi valida ou não
+     * para ser uma escolha valida: o jogador deve possuir a carta, a carta deve possuir o mesmo valor ou cor que a carta atual.
+     */
+	private boolean isValidChoice(Player p,int choice)
+    {
+        if (choice == -1) return true;
+		return choice < p.getNumCards() && p.cardAt(choice).canPutThisAbove(current);
 	}
 	
 	
@@ -182,26 +139,27 @@ public class Uno
 		 */
 		System.out.println("Pressione enter para continuar......");
 		choice.nextLine();
-		
 	}
-	
-		
-	private boolean hasColor(Player p) {
-		/*
-		 * Verifica se o jogador possuir alguma carta com a mesma cor da carta atual na mesa		 
-		 */
-		for(Card c:p.PlayerCards()) {
-			
-			if(c.getColor() == current.getColor()) {
-				return true;
-			}
-			
-			
-		}
-		
-		return false;
-	}
-	
+
+
+	private boolean compra (Player p, int penalty)
+    {
+        Card pick;
+        for(int i=0;i<penalty;i++)
+        {
+            if(deck.isEmpty()) {
+                if (cardpile.isEmpty()) return false;
+                deck = cardpile;
+                deck.shuffle();
+                cardpile = new Deck();
+            }
+            pick = deck.getTopCard();
+            p.pickCards(pick);
+        }
+
+        return true;
+    }
+
 	private boolean hasValue(Player p) {  
 		/*
 		 * Verifica se o jogador possuir alguma carta com o mesmo valor da carta atual na mesa
@@ -218,19 +176,14 @@ public class Uno
 		
 		return false;
 	}
-	
-	
+
+    /**
+     * Verifica se o jogador possuir alguma carta especial de compra.
+     */
 	private boolean canOverride(Player p) {
-		
-		/*
-		 * Verifica se o jogador possuir alguma carta especial
-		 * Cartas especiais podem ser jogadas quando você não possuir uma carta da mesmo cor ou mesmo valor da carta atual na mesa.		 
-		 		 
-		 */
-		for(Card c:p.PlayerCards()) {
-			
-			if(c.isSpecial()) {
-				if(c.getValue() >= current.getValue()) {
+		for(int i = 0; i < p.getNumCards(); i++) {
+			if(p.cardAt(i).getPenalty() != 0) {
+				if(p.cardAt(i).getValue() >= current.getValue()) {
 					return true;
 				}
 			}
@@ -239,23 +192,15 @@ public class Uno
 		
 		return false;
 	}
-	
+
+    /**
+     * Desenha linha de asteriscos.
+     */
 	private void decorate() {
-		/*
-		 * Desenha linha de asteriscos
-		 */
-		
-		
 		System.out.println("***********************************************************************************");
 	}
-	
-	
-	
-	
-	private Card getStartingCard() {
-		
 
-		
+	private Card getStartingCard() {
 		Card temp = deck.peek();
 		while(temp.isSpecial()) {
 			deck.shuffle();
@@ -265,51 +210,42 @@ public class Uno
 		temp = deck.getTopCard();
 		return temp;
 	}
-	
-	
-	
 
+    public boolean gameOver(Player p1,Player p2) {
+        if(p1.hasWon()) {
+            System.out.println("**************************************************");
+            System.out.println("Jogador 1 venceu");
+            System.out.println("**************************************************");
+            return true;
+        }
 
-public boolean gameOver(Player p1,Player p2) {
-	
-	if(p1.hasWon()) {
-		System.out.println("**************************************************");
-		System.out.println("Jogador 1 venceu");
-		System.out.println("**************************************************");
-		return true;
-	}
-	
-	else if(p2.hasWon()) {
-		System.out.println("**************************************************");
-		System.out.println("Jogador 1 venceu");
-		System.out.println("**************************************************");
-		return true;
-	}
-	
-	return false;
-}
+        else if(p2.hasWon()) {
+            System.out.println("**************************************************");
+            System.out.println("Jogador 1 venceu");
+            System.out.println("**************************************************");
+            return true;
+        }
+        return false;
+    }
 
-public void showBoard(Player p) {
-	
-	if(p.toString().equals("Jogador 1")) {
-		System.out.println("                Jogador 1");
-		p1.showCards();
-		p2.hideCards();
-		System.out.println("                Jogador 2");
-		System.out.println("");
-	}
-	else {
-		
-		System.out.println("                Jogador 1");
-		p1.hideCards();
-		p2.showCards();
-		System.out.println("                Jogador 2");
-		System.out.println("");
-		
-	}
-	
-}
-
-
-
+    public void showBoard(Player p) {
+        decorate();
+        System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+current);
+        decorate();
+        if(p.toString().equals("Jogador 1"))
+        {
+            System.out.println("                Jogador 1");
+            p1.showCards();
+            p2.hideCards();
+            System.out.println("                Jogador 2\n");
+        }
+        else
+            {
+            System.out.println("                Jogador 1");
+            p1.hideCards();
+            p2.showCards();
+            System.out.println("                Jogador 2\n");
+        }
+	    decorate();
+    }
 }

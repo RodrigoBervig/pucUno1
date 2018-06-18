@@ -32,28 +32,17 @@ public class Deck
 
 		private void preenche() {
             // cartas normais
-            for (int i = 1; i <= 4; i++)
+            for (int cor = 1; cor <= 4; cor++)
             {
-                addToDeck(new Card(0, i, false));
-                for (int j = 1; j <= 9; j++)
+                addToDeck(new Card(0, cor));
+                addToDeck(new Card(13, 0));
+                addToDeck(new Card(14, 0));
+                for (int numero = 1; numero <= 12; numero++)
                 {
-                    addToDeck(new Card(j, i, false));
-                    addToDeck(new Card(j, i, false));
+                    addToDeck(new Card(numero, cor));
+                    addToDeck(new Card(numero, cor));
                 }
             }
-
-
-            // cartas especiais com cores
-		    for (int i = 1; i <= 4; i++) {
-                for (int j = 0; j <= 2; j++) {
-                    addToDeck(new Card(j, i, true));
-                    addToDeck(new Card(j, i, true));
-                }
-            }
-
-            //cartas especiais sem cores
-            for (int i = 1; i <= 4; i++) addToDeck(new Card(3, 0,true));
-            for (int i = 1; i <= 4; i++) addToDeck(new Card(4, 0,true));
         }
 
 		/** Checa o tamanho do deck, se for maior que zero, retorna false,
@@ -90,6 +79,8 @@ public class Deck
 
             Card c = deck[numCards - 1];
             deck[numCards - 1] = null;
+            numCards --;
+
             return c;
 		}
 		

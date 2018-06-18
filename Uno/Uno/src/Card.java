@@ -5,8 +5,6 @@ public class Card
 {
     private int cor;
 	private int valor;
-	private int valorEsp;
-	private boolean special;
 
 	/*
 	    Cores:
@@ -17,11 +15,11 @@ public class Card
 	        4 - Yellow
 
 	    Valor especial:
-	        0 - Pula
-	        1 - Retorno
-	        2 - Compra 2
-	        3 - Coringa (sem cor a priori)
-	        4 - Compra 4 (sem cor a priori)
+	        10 - Pula
+	        11 - Retorno
+	        12 - Compra 2
+	        13 - Coringa (sem cor a priori)
+	        14 - Compra 4 (sem cor a priori)
 
 	 */
 
@@ -30,18 +28,9 @@ public class Card
      * @param valor valor (inteiro) da carta
      * @param cor   a cor da carta (inteiro).
      */
-	public Card(int valor, int cor, boolean special) {
-		setSpecial(special);
+	public Card(int valor, int cor) {
 		setCor(cor);
-
-		if (special) {
-            setValorEsp(valor);
-            this.valor = -1;
-        }
-        else {
-            setValor(valor);
-            this.valorEsp = -1;
-        }
+		setValor(valor);
 	}
 
     private void setCor(int cor) {
@@ -50,15 +39,7 @@ public class Card
     }
 
     private void setValor(int valor){
-        if(valor >= 0 && valor <=9) this.valor = valor;
-    }
-
-    private void setValorEsp(int valorEsp) {
-        if(valorEsp >= 0 && valorEsp <= 4) this.valorEsp = valorEsp;
-    }
-
-    private void setSpecial(boolean special){
-	    this.special = special;
+        if(valor >= 0 && valor <=14) this.valor = valor;
     }
 
     /** Retorna a cor da carta*/
@@ -80,34 +61,45 @@ public class Card
 
 	/** Retorna o valor da Carta*/
 	public int getValue(){
-	    if(special) return this.valorEsp;
         return this.valor;
 	}
 
 	public String getValueString()
     {
-        StringBuilder sb = new StringBuilder();
-        if(special)
-            if (valorEsp == 2 || valorEsp == 4) sb.append("+").append(valorEsp).append(" ");
-            else sb.append(" ").append(valorEsp).append(" ");
-        else sb.append(" ").append(valor).append(" ");
-
-        return sb.toString();
+        switch(valor)
+        {
+            case 10: return "pul";
+            case 11: return "inv";
+            case 12: return "+2 ";
+            case 13: return "cur";
+            case 14: return "+4 ";
+            default: return " " + valor + " ";
+        }
     }
 
     /** Método que checa se a carta é especial. True se for; False se não for. */
     public boolean isSpecial() { //Como se fosse getSpecial()
-        return special;
+        return valor >= 10;
+    }
+
+    public boolean isCoringa() {
+        return valor >= 13;
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-
-		sb.append(" ----- \n");
-		sb.append("| ").append(this.getColorString()).append(" |").append(" \n");
-        sb.append("| ").append(this.getValueString()).append(" |").append(" \n");
-		sb.append(" ----- \n");
-
-		return sb.toString();
+        return " ----- \n| " + this.getColorString() + " \n| " +
+                this.getValueString() + " | \n ----- \n";
 	}
+
+	public boolean canPutThisAbove (Card below)
+    {
+        if (this.isCoringa()) return true;
+        return below.getColor() == this.getColor() || below.getValue() == below.getValue();
+    }
+
+    public int getPenalty ()
+    {
+        if (valor == 12 || valor == 14) return valor - 10;
+        return 0;
+    }
 }

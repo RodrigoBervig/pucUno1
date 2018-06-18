@@ -4,54 +4,66 @@ import java.util.Scanner;
 
 public class Player
 {
-	private ArrayList<Card> playercards; 
-	private String nome; //nome do jogador
-	
+	private Card[] playercards;
+	private int numCards;
+	private String name; //nome do jogador
+
+    /**
+     * cria um array list que armazena as cartas do jogador
+     * atribui nome ao jogador.
+     * Esse objeto é criado na classe UNO.
+     */
 	public Player(String nome) {
-		/*
-		 * cria um array list que armazena as cartas do jogador		
-		 * atribui nome ao jogador 
-		 */
-		
-		//objeto jogador é criado na classe Uno
-		
-		playercards = new ArrayList<Card>();
-		this.nome = nome;
-		
+		playercards = new Card[108];
+		int numCards = 0;
+		this.name = nome;
 	}
-	
-	public int numberOfCards() {
-		/*
-		 * retorna o numero de cartas que o jogador possui na mão
-		 */
-		return playercards.size();
+
+    /**
+     * retorna o numero de cartas que o jogador possui na mão
+     */
+	public int getNumCards() {
+		return numCards;
 	}
-	
-	public ArrayList<Card> PlayerCards(){
-		/*
-		 * Retorna todas as cartas que o jogador possui na mão como um ArrayList		 
-		 * Isso é usado para chegar se o jogador tem alguma carta valida para jogar		 
-		 */
-		
+
+	private boolean add (Card c)
+    {
+        if (numCards < 0 || c == null) return false;
+
+        playercards[numCards] = c;
+        numCards++;
+        return true;
+    }
+
+    private Card remove (int i)
+    {
+        if (numCards < 0 || i < 0 || i >= numCards) return null;
+
+        Card c = playercards[numCards - 1];
+        playercards[numCards - 1] = null;
+        numCards--;
+
+        return c;
+    }
+
+    /**
+     * Retorna todas as cartas que o jogador possui na mão como um ArrayList
+     * Isso é usado para chegar se o jogador tem alguma carta valida para jogar
+     */
+	public Card[] PlayerCards(){
 		return playercards;
 	}
 	
 	
-	public void pickCards(Card c) {
-		/*
-		 * 
-		 */
-		playercards.add(c);
-		
+	public boolean pickCards(Card c) {
+		return add(c);
 	}
-	
+
+    /**
+      * O jogador joga uma carta de sua mão que esta na posição 'c'. c é um valor integer e é passado como parametro
+      */
 	public Card throwCard(int c) {
-		/*
-		 * O jogador joga uma carta de sua mão que esta na posição 'c'. c é um valor integer e é passado como parametro		 
-		 */
-		
-		
-		return playercards.remove(c);
+		return remove(c);
 	}
 	
 	public void sayUno() {
@@ -60,7 +72,7 @@ public class Player
 		 */
 		Scanner s = new Scanner(System.in);
 		
-		if (playercards.size()==1)
+		if (numCards==1)
 		{
 			System.out.println("Uno");
 			System.out.println("Pressione Enter...");
@@ -74,21 +86,26 @@ public class Player
 	  * usado no método showboard() na classe Uno
 	  **/
 	public void showCards() {
+        System.out.println("player cards size: " + numCards);
+
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < playercards.size(); i++)
+		for (int i = 0; i < numCards; i++)
 			sb.append(" -----  ");
 		sb.append("\n");
 
-		for (int i = 0; i < playercards.size(); i++)
-			sb.append("| ").append(this.playercards.get(i).getColorString()).append(" | ");
+		for (int i = 0; i < numCards; i++) {
+            sb.append("| ");
+            sb.append(playercards[i].getColorString());
+            sb.append(" | ");
+        }
 		sb.append("\n");
 
-		for (int i = 0; i < playercards.size(); i++)
-			sb.append("| ").append(this.playercards.get(i).getValueString()).append(" | ");
+		for (int i = 0; i < numCards; i++)
+			sb.append("| ").append(playercards[i].getValueString()).append(" | ");
 		sb.append("\n");
 
-		for (int i = 0; i < playercards.size(); i++)
+		for (int i = 0; i < numCards; i++)
 			sb.append(" -----  ");
 		sb.append("\n");
 		
@@ -102,19 +119,19 @@ public class Player
 	public void hideCards() {
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < playercards.size(); i++)
+		for (int i = 0; i < numCards; i++)
 			sb.append(" -----  ");
 		sb.append("\n");
 
-		for (int i = 0; i < playercards.size(); i++)
+		for (int i = 0; i < numCards; i++)
 			sb.append("|     | ");
 		sb.append("\n");
 
-		for (int i = 0; i < playercards.size(); i++)
+		for (int i = 0; i < numCards; i++)
 			sb.append("|     | ");
 		sb.append("\n");
 
-		for (int i = 0; i < playercards.size(); i++)
+		for (int i = 0; i < numCards; i++)
 			sb.append(" -----  ");
 		sb.append("\n");
 
@@ -125,22 +142,29 @@ public class Player
 	 * verifica se o jogador venceu ou não
 	 */
 	public boolean hasWon() {
-
-		return playercards.size()==0;
-
+		return numCards==0;
 	}
-
-
 
 	/**
 	 * Representação do jogador em texto
 	 */
-	public String toString() {
-
-		return this.nome;
+	public String getName() {
+		return this.name;
 	}
 	
-	
-	
-	
+	public Card cardAt(int i)
+    {
+        if (i < 0 || i >= numCards) return null;
+
+        return playercards[i];
+    }
+
+    public boolean hasCardToPutAbove (Card current)
+    {
+        for (int i = 0; i < getNumCards(); i++)
+        {
+            if (playercards[i].canPutThisAbove(current)) return true;
+        }
+        return false;
+    }
 }
