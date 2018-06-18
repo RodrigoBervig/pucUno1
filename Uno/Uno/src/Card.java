@@ -87,7 +87,7 @@ public class Card
     }
 
     public String toString() {
-        return " ----- \n| " + this.getColorString() + " \n| " +
+        return " ----- \n| " + this.getColorString() + " |\n| " +
                 this.getValueString() + " | \n ----- \n";
 	}
 
