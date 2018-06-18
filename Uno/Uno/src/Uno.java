@@ -50,8 +50,8 @@ public class Uno
     {
 		for(int i=0;i<7;i++)
 		{
-            p1.pickCards(deck.getTopCard());
-            p2.pickCards(deck.getTopCard());
+            p1.add(deck.getTopCard());
+            p2.add(deck.getTopCard());
 		}
 	}
 
@@ -74,9 +74,12 @@ public class Uno
 			if(!canOverride(p))
 			{
 				System.out.println("Você não tem nenhuma carta para jogar contra a carta especial atual, sendo assim você sofrerá a penalização");
+				System.out.println("Penalização: " + penalty);
 				compra(p, penalty);
 				penalty = 0;
 				current = deck.getTopCard();
+				showBoard(p);
+				pause();
 				return;
 			}
 		}
@@ -161,28 +164,11 @@ public class Uno
                 cardpile = new Deck();
             }
             pick = deck.getTopCard();
-            p.pickCards(pick);
+            p.add(pick);
         }
 
         return true;
     }
-
-	private boolean hasValue(Player p) {  
-		/*
-		 * Verifica se o jogador possuir alguma carta com o mesmo valor da carta atual na mesa
-		 */
-		
-		for(Card c:p.PlayerCards()) {
-			
-			if(c.getValue()==current.getValue()) {
-				
-				return true;
-				
-			}
-		}
-		
-		return false;
-	}
 
     /**
      * Verifica se o jogador possuir alguma carta especial de compra.
@@ -240,6 +226,12 @@ public class Uno
         decorate();
         System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+current);
         decorate();
+        showCards(p);
+	    decorate();
+    }
+
+    private void showCards (Player p)
+    {
         if(p == p1) {
             System.out.println("                Jogador 1");
             p1.showCards();
@@ -253,6 +245,5 @@ public class Uno
             p2.showCards();
             System.out.println("                Jogador 2\n");
         }
-	    decorate();
     }
 }

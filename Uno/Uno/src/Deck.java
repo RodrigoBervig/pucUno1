@@ -49,7 +49,7 @@ public class Deck
          *  se não, retorna true.
          */
 		public boolean isEmpty() { //
-		    return numCards>0;
+		    return numCards==0;
 		}
 
 		/** Embaralha o deck*/

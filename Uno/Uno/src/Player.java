@@ -24,7 +24,7 @@ public class Player
 		return numCards;
 	}
 
-	private boolean add (Card c)
+	public boolean add (Card c)
     {
         if (numCards < 0 || c == null) return false;
 
@@ -58,13 +58,7 @@ public class Player
 	public Card[] PlayerCards(){
 		return playercards;
 	}
-	
-	
-	public boolean pickCards(Card c) {
-		return add(c);
-	}
 
-	
 	public void sayUno() {
 		/*
 		 * jogador diz Uno quando tiver apenas uma carta na mão 
