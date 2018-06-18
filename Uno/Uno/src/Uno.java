@@ -38,11 +38,10 @@ public class Uno
      */
 	public void game() {
 		int turn = 0;
-		do {
-			if(turn%2==0) {
-			playGame(p1);}
-			else {
-			playGame(p2);}
+		do
+        {
+            if(turn%2==0) playGame(p1);
+			else playGame(p2);
 			turn++;
 		} while(!gameOver(p1,p2));
 	}
@@ -71,7 +70,8 @@ public class Uno
 		{
             penalty += current.getPenalty();
 
-			if(!canOverride(p)) {
+			if(!canOverride(p))
+			{
 				System.out.println("Você não tem nenhuma carta para jogar contra a carta especial atual, sendo assim você sofrerá a penalização");
 				compra(p, penalty);
 				penalty = 0;
@@ -85,20 +85,16 @@ public class Uno
         System.out.println("Por favor, escolha uma carta (digite zero para comprar): ");
 
         pickchoice = choice.nextInt()-1;
-
-
-        while(!isValidChoice(p,pickchoice)) {
+        while(!isValidChoice(p,pickchoice))
+        {
             System.out.println("Escolha invalida! Por favor, tente novamente: ");
             pickchoice = choice.nextInt()-1;
         }
 
-        if (pickchoice == -1)
-        {
-                compra(p, 1);
-        }
+        if (pickchoice == -1) compra(p, 1);
         else
         {
-            Card play = p.throwCard(pickchoice);
+            Card play = p.remove(pickchoice);
             p.sayUno();
             current = play;
             cardpile.addToDeck(current);
@@ -112,7 +108,7 @@ public class Uno
 	private boolean isValidChoice(Player p,int choice)
     {
         if (choice == -1) return true;
-		return choice < p.getNumCards() && p.cardAt(choice).canPutThisAbove(current);
+		return p.cardAt(choice).canPutThisAbove(current);
 	}
 	
 	

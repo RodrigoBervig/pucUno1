@@ -35,12 +35,18 @@ public class Player
         return true;
     }
 
-    private Card remove (int i)
+    public Card remove (int i)
     {
         if (numCards < 0 || i < 0 || i >= numCards) return null;
 
-        Card c = playercards[numCards - 1];
-        playercards[numCards - 1] = null;
+        Card c = playercards[i];
+        playercards[i] = null;
+
+        for (int k = i; k < numCards - 1; k++)
+        {
+            playercards[k] = playercards[k+1];
+        }
+
         numCards--;
 
         return c;
@@ -59,12 +65,6 @@ public class Player
 		return add(c);
 	}
 
-    /**
-      * O jogador joga uma carta de sua mão que esta na posição 'c'. c é um valor integer e é passado como parametro
-      */
-	public Card throwCard(int c) {
-		return remove(c);
-	}
 	
 	public void sayUno() {
 		/*
