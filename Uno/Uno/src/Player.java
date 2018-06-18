@@ -40,9 +40,12 @@ public class Player
         Card c = playercards[i];
         playercards[i] = null;
 
-        if (i != numCards - 1)
-            System.arraycopy(playercards, i + 1, playercards, i, numCards - 1 - i);
-        this.numCards--;
+        for (int k = i; k < numCards - 1; k++)
+        {
+            playercards[k] = playercards[k+1];
+        }
+
+        numCards--;
         playercards[numCards] = null;
 
         return c;
