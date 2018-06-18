@@ -1,7 +1,8 @@
 import java.util.Scanner;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Uno
+public class Uno implements Serializable
 {
 	private Card current; //a carta atual ou carta anterior do jogador ou carta inicial
 	private Deck deck; // o deck do jogo

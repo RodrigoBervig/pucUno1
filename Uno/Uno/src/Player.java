@@ -1,6 +1,7 @@
 import java.util.Scanner;
+import java.io.Serializable;
 
-public class Player
+public class Player implements Serializable
 {
 	private Card[] playercards;
 	private int numCards;

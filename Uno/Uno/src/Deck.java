@@ -1,9 +1,10 @@
 import java.util.Random;
+import java.io.Serializable;
 
 /**
  * Implementa um deck de cartas.
  */
-public class Deck
+public class Deck implements Serializable
 {
 	private Card[] deck;
 	private int numCards;

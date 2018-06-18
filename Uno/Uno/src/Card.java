@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Essa classe implementa uma carta de UNO.
  */
-public class Card
+public class Card implements Serializable
 {
     private int cor;
 	private int valor;
