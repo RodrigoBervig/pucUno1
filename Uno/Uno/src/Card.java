@@ -33,7 +33,7 @@ public class Card
 		setValor(valor);
 	}
 
-    private void setCor(int cor) {
+    public void setCor(int cor) {
         if(cor >= 0 && cor <= 4)
             this.cor = cor;
     }

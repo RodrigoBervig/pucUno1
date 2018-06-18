@@ -6,7 +6,6 @@ public class Uno
 	private Deck deck; // o deck do jogo
 	private Deck cardpile; //quando os jogadores jogam uma carta, ela é empilhada aqui, também, cria um novo deck quando o deck atual estiver vazio
 	private int penalty; // quando cartas especiais são acumuladas  a penalidade acumula, se um jogador não tiver como counterar a carta especial atual, o jogador é penalizado
-	private Scanner choice;
 	private Player p1, p2; //player 1 and 2
 	private int pick; // players pick
 
@@ -25,7 +24,7 @@ public class Uno
 
 		cardpile = new Deck();
 		cardpile.addToDeck(current);
-		choice = new Scanner(System.in);
+
 		p1 = new Player("Jogador 1");
 		p2 = new Player("Jogador 2");
 		distributecards();
@@ -63,7 +62,9 @@ public class Uno
      */
 	public void playGame(Player p)
     {
-		showBoard(p);
+        Scanner choice = new Scanner(System.in);
+
+        showBoard(p);
 		int pickchoice;
 
 		if(current.getPenalty() > 0)
@@ -98,6 +99,19 @@ public class Uno
             p.sayUno();
             current = play;
             cardpile.addToDeck(current);
+            if (play.isCoringa())
+            {
+                System.out.println("Carta jogada é um curinga. Escolha uma cor (1 - red, 2 - green, 3 - blue, 4 - yellow): ");
+                int cor = choice.nextInt();
+
+                if (cor < 1 || cor > 4)
+                {
+                    System.out.println("Opcao invalida! Tente novamente.");
+                    cor = choice.nextInt();
+                }
+
+                play.setCor(cor);
+            }
         }
 	}
 
@@ -110,18 +124,30 @@ public class Uno
         if (choice == -1) return true;
 		return p.cardAt(choice).canPutThisAbove(current);
 	}
-	
-	
+
+    /**
+     *Cria uma pausa
+     * pergunta ao usuario se deseja continuar
+     * feito apenas para aumentar a interatividade com o usuário
+     */
 	private void pause() {
-		/*
-		 *Cria uma pausa
-		 * pergunta ao usuario se deseja continuar
-		 * feito apenas para aumentar a interatividade com o usuário
-		 */
-		System.out.println("Pressione enter para continuar......");
-		choice.nextLine();
+	    Scanner in = new Scanner(System.in);
+	    String opcao;
+
+		System.out.println("Digite s para salvar o jogo ou qualquer outra coisa para continuar......");
+		opcao = in.nextLine();
+
+		System.out.print(opcao); // so pro compilador nao reclamar
+
+		//TODO if (opcao.equals("s")) savegame();
 	}
 
+	private boolean savegame()
+    {
+        //TODO
+
+        return true;
+    }
 
 	private boolean compra (Player p, int penalty)
     {
