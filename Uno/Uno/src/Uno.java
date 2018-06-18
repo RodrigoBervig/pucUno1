@@ -62,7 +62,8 @@ public class Uno
      *  este metodo pega o jogador atual como parametro
      *  esse método contem o processo do jogo
      */
-	public void playGame(Player p) {
+	public void playGame(Player p)
+    {
 		showBoard(p);
 		int pickchoice;
 
@@ -75,49 +76,33 @@ public class Uno
 				compra(p, penalty);
 				penalty = 0;
 				current = deck.getTopCard();
+				return;
 			}
 		}
+
+        if (!p.hasCardToPutAbove(current))
+            System.out.println("Você não possui nenhuma carta valida para jogar, então tera de comprar cartas.");
+        System.out.println("Por favor, escolha uma carta (digite zero para comprar): ");
+
+        pickchoice = choice.nextInt()-1;
+
+
+        while(!isValidChoice(p,pickchoice)) {
+            System.out.println("Escolha invalida! Por favor, tente novamente: ");
+            pickchoice = choice.nextInt()-1;
+        }
+
+        if (pickchoice == -1)
+        {
+                compra(p, 1);
+        }
         else
         {
-            if (!p.hasCardToPutAbove(current))
-                System.out.println("Você não possui nenhuma carta valida para jogar, então tera de comprar cartas.");
-            System.out.println("Por favor, escolha uma carta (digite zero para comprar): ");
-
-            pickchoice = choice.nextInt()-1;
-
-
-            while(!isValidChoice(p,pickchoice)) {
-                System.out.println("Escolha invalida! Por favor, tente novamente: ");
-                pickchoice = choice.nextInt()-1;
-            }
-
-            if (pickchoice == -1)
-            {
-                compra(p, 1);
-            }
-            else
-            {
-                Card play = p.throwCard(pickchoice);
-                p.sayUno();
-                current = play;
-                cardpile.addToDeck(current);
-            }
-
+            Card play = p.throwCard(pickchoice);
+            p.sayUno();
+            current = play;
+            cardpile.addToDeck(current);
         }
-	}
-	
-	
-	private boolean hasSpecial(Player p) {
-		for(Card c:p.PlayerCards()) {
-			
-			if(c.isSpecial()) {
-				return true;
-			}
-			
-		}
-		
-		
-		return false;
 	}
 
     /**
@@ -228,19 +213,19 @@ public class Uno
         return false;
     }
 
-    public void showBoard(Player p) {
+    public void showBoard(Player p)
+    {
         decorate();
         System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+current);
         decorate();
-        if(p.toString().equals("Jogador 1"))
-        {
+        if(p == p1) {
             System.out.println("                Jogador 1");
             p1.showCards();
             p2.hideCards();
             System.out.println("                Jogador 2\n");
         }
         else
-            {
+        {
             System.out.println("                Jogador 1");
             p1.hideCards();
             p2.showCards();
