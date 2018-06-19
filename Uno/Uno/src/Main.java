@@ -12,9 +12,9 @@ public class Main implements Serializable
      * Main apenas roda o jogo chamando o método game.
      * Metodo game esta na classe Uno.
      */
-	public static void main(String[] args) throws IOException, InterruptedException
+	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException
 	{
-		Uno game = new Uno();
+		Uno game = new Uno(args);
 		game.game();
 	}
 }

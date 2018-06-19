@@ -1,6 +1,12 @@
 import java.util.Scanner;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Uno implements Serializable
 {
@@ -16,22 +22,45 @@ public class Uno implements Serializable
      * constroi o jogo
      * prepara o jogo para jogar
      */
-	public Uno() {
+	public Uno(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException
+    {
+        if (args == null)
+        {
+            deck = new Deck();
+            deck.inicializa();
 
-		deck = new Deck();
-		deck.inicializa();
+            penalty = 0;
+            current = getStartingCard();
 
-		penalty = 0;
-		current = getStartingCard();
+            cardpile = new Deck();
+            cardpile.addToDeck(current);
 
-		cardpile = new Deck();
-		cardpile.addToDeck(current);
+            p1 = new Player("Jogador 1");
+            p2 = new Player("Jogador 2");
+            distributecards();
+        }
 
-		p1 = new Player("Jogador 1");
-		p2 = new Player("Jogador 2");
-		distributecards();
+        else recuperateOlderGame(args);
 	}
 
+	public void recuperateOlderGame(String args[]) throws FileNotFoundException, IOException, ClassNotFoundException
+    {
+        FileInputStream fi = new FileInputStream(new File(args[0]));
+        ObjectInputStream oi = new ObjectInputStream(fi);
+
+        deck = (Deck) oi.readObject();
+
+        penalty = oi.readInt();
+        current = (Card) oi.readObject();
+
+        cardpile = (Deck) oi.readObject();
+
+        p1 = (Player) oi.readObject();
+        p2 = (Player) oi.readObject();
+
+        oi.close();
+        fi.close();
+    }
 
 	/**
 	 *  esse método simula turnos entre os dois jogadores. quando o turno é par, jogar 1 joga, quando o turno é impar jogador 2 joga.
@@ -161,9 +190,21 @@ public class Uno implements Serializable
 		//TODO if (opcao.equals("s")) savegame();
 	}
 
-	private boolean savegame()
+	private boolean savegame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-        //TODO
+        FileOutputStream f = new FileOutputStream(new File(namefile));
+        ObjectOutputStream o = new ObjectOutputStream(f);
+
+        // Write objects to file
+        o.writeObject(deck);
+        o.writeObject(penalty);
+        o.writeObject(current);
+        o.writeObject(cardpile);
+        o.writeObject(p1);
+        o.writeObject(p2);
+
+        o.close();
+        f.close();
 
         return true;
     }
