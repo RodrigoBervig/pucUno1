@@ -24,7 +24,7 @@ public class Uno implements Serializable
      */
 	public Uno(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-        if (args == null)
+        if (args.length == 0)
         {
             deck = new Deck();
             deck.inicializa();
@@ -66,7 +66,7 @@ public class Uno implements Serializable
 	 *  esse método simula turnos entre os dois jogadores. quando o turno é par, jogar 1 joga, quando o turno é impar jogador 2 joga.
 	 *  this method simulates turns between the two players. when turn is even, player 1 plays and when
      */
-	public void game() throws IOException, InterruptedException
+	public void game() throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException
     {
 		int turn = 0;
 		Player currentPlayer;
@@ -99,7 +99,7 @@ public class Uno implements Serializable
      *  este metodo pega o jogador atual como parametro
      *  esse método contem o processo do jogo
      */
-	public void playGame(Player p) throws IOException, InterruptedException
+	public void playGame(Player p) throws IOException, InterruptedException, ClassNotFoundException
     {
         Scanner choice = new Scanner(System.in);
 
@@ -177,7 +177,7 @@ public class Uno implements Serializable
      * pergunta ao usuario se deseja continuar
      * feito apenas para aumentar a interatividade com o usuário
      */
-	private void pause()
+	private void pause() throws FileNotFoundException, IOException, ClassNotFoundException
     {
 	    Scanner in = new Scanner(System.in);
 	    String opcao;
@@ -185,9 +185,12 @@ public class Uno implements Serializable
 		System.out.println("Digite s para salvar o jogo ou qualquer outra coisa para continuar......");
 		opcao = in.nextLine();
 
-		System.out.print(opcao); // so pro compilador nao reclamar
-
-		//TODO if (opcao.equals("s")) savegame();
+		if (opcao.equals("s"))
+        {
+            System.out.println("Digite o nome de um arquivo para salvar: ");
+            opcao = in.nextLine();
+            savegame(opcao);
+        }
 	}
 
 	private boolean savegame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
