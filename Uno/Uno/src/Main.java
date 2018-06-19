@@ -14,7 +14,18 @@ public class Main implements Serializable
      */
 	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException
     {
-		Uno game = new Uno(args);
+        int escolha = Uno.menuInicial();
+        Uno game;
+        String filename;
+
+        if (escolha == 0)
+        {
+            filename = Uno.askFilename();
+            game = new Uno(filename);
+        }
+        else
+            game = new Uno (escolha);
+
 		game.game();
 	}
 }

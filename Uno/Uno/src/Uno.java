@@ -1,12 +1,5 @@
 import java.util.Scanner;
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public class Uno implements Serializable
 {
@@ -14,31 +7,109 @@ public class Uno implements Serializable
 	private Deck cardpile; //quando os jogadores jogam uma carta, ela é empilhada aqui, também, cria um novo deck quando o deck atual estiver vazio
 	private int penalty; // quando cartas especiais são acumuladas  a penalidade acumula, se um jogador não tiver como counterar a carta especial atual, o jogador é penalizado
 	private Player p1, p2; //player 1 and 2
-	private int pick; // players pick
 
     /**
      * construtor
      * constroi o jogo
      * prepara o jogo para jogar
      */
-	public Uno(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException
+	public Uno(int numJogadores)
     {
-        if (args.length == 0)
+        deck = new Deck();
+        deck.inicializa();
+
+        penalty = 0;
+        cardpile = new Deck();
+        cardpile.addToDeck(getStartingCard());
+
+        p1 = new Player("Jogador 1");
+        p2 = new Player("Jogador 2");
+        distributecards();
+
+	}
+
+	public Uno (String filename) throws FileNotFoundException, IOException, ClassNotFoundException
+    {
+        recuperateOlderGame(filename);
+    }
+
+	public static int menuInicial () throws InterruptedException, FileNotFoundException, IOException, ClassNotFoundException
+    {
+        Scanner in = new Scanner(System.in);
+        int numJogadores, opcao;
+
+        cls();
+        decorate();
+        System.out.println("\n\t\t\t\tUNO\n");
+        decorate();
+        System.out.println("\n\n\n");
+
+        System.out.println("Menu\n\t1: novo jogo\n\t2: carregar jogo antigo\n\nEscolha uma opção: ");
+        opcao = in.nextInt();
+
+        while (opcao != 1 && opcao != 2)
         {
-            deck = new Deck();
-            deck.inicializa();
-
-            penalty = 0;
-            cardpile = new Deck();
-            cardpile.addToDeck(getStartingCard());
-
-            p1 = new Player("Jogador 1");
-            p2 = new Player("Jogador 2");
-            distributecards();
+            System.out.print("Opção inválida. Digite novamente: ");
+            opcao = in.nextInt();
         }
 
-        else recuperateOlderGame(args[0]);
-	}
+        int length = findSavedGamesOnFolder().length;
+
+        if (opcao == 2 && length > 0) return 0;
+        else
+        {
+            if (length == 0) System.out.println("Não há jogos salvos.");
+            System.out.println("Digite o número de jogadores para uma nova partida: ");
+            numJogadores = in.nextInt();
+            while (numJogadores < 2 || numJogadores >5)
+            {
+                System.out.println("Escolha inválida. Digite novamente: ");
+                numJogadores = in.nextInt();
+            }
+            return numJogadores;
+        }
+    }
+
+	public static String askFilename()
+    {
+        Scanner in = new Scanner (System.in);
+        File[] fileList = findSavedGamesOnFolder();
+
+        System.out.println("Jogos salvos: ");
+        displaySavedGames(fileList);
+
+        System.out.println("\n\nEscolha um jogo: ");
+        int k = in.nextInt();
+
+        if (k <= 0 || k > fileList.length){
+            System.out.println("Opção inválida. Tente novamente: ");
+            k = in.nextInt();
+        }
+
+        return fileList[k].getName();
+    }
+
+    private static void displaySavedGames(File[] fileList)
+    {
+        String s;
+
+        for (int i = 1; i <= fileList.length; i++)
+        {
+            s = fileList[i-1].getName();
+            System.out.println(i + s.substring(0, s.length() - 5));
+        }
+    }
+
+	private static File[] findSavedGamesOnFolder()
+    {
+        String workingDirectory = System.getProperty("user.dir");
+
+        File dir = new File(workingDirectory);
+        return dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String filename)
+            { return filename.endsWith(".uno"); }
+        } );
+    }
 
 	public void recuperateOlderGame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
     {
@@ -46,11 +117,8 @@ public class Uno implements Serializable
         ObjectInputStream oi = new ObjectInputStream(fi);
 
         deck = (Deck) oi.readObject();
-
         penalty = oi.readInt();
-
         cardpile = (Deck) oi.readObject();
-
         p1 = (Player) oi.readObject();
         p2 = (Player) oi.readObject();
 
@@ -184,9 +252,9 @@ public class Uno implements Serializable
 
 		if (opcao.equals("s"))
         {
-            System.out.println("Digite o nome de um arquivo para salvar: ");
+            System.out.println("Digite um nome para esse save: ");
             opcao = in.nextLine();
-            savegame(opcao);
+            savegame(opcao + ".uno");
         }
 	}
 
@@ -245,7 +313,7 @@ public class Uno implements Serializable
     /**
      * Desenha linha de asteriscos.
      */
-	private void decorate() {
+	private static void decorate() {
 		System.out.println("*********************************************************" +
                 "******");
 	}
@@ -307,7 +375,7 @@ public class Uno implements Serializable
         }
     }
 
-    private void cls() throws IOException, InterruptedException
+    private static void cls() throws IOException, InterruptedException
     {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
