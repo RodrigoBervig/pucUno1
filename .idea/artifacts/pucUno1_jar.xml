@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="pucUno1:jar">
-    <output-path>$PROJECT_DIR$/Uno/Uno/bin/artifacts/pucUno1_jar</output-path>
-    <root id="archive" name="pucUno1.jar">
-      <element id="module-output" name="pucUno1" />
-    </root>
-  </artifact>
-</component>
