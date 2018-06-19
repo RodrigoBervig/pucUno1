@@ -10,7 +10,6 @@ import java.io.ObjectOutputStream;
 
 public class Uno implements Serializable
 {
-	private Card current; //a carta atual ou carta anterior do jogador ou carta inicial
 	private Deck deck; // o deck do jogo
 	private Deck cardpile; //quando os jogadores jogam uma carta, ela é empilhada aqui, também, cria um novo deck quando o deck atual estiver vazio
 	private int penalty; // quando cartas especiais são acumuladas  a penalidade acumula, se um jogador não tiver como counterar a carta especial atual, o jogador é penalizado
@@ -30,28 +29,25 @@ public class Uno implements Serializable
             deck.inicializa();
 
             penalty = 0;
-            current = getStartingCard();
-
             cardpile = new Deck();
-            cardpile.addToDeck(current);
+            cardpile.addToDeck(getStartingCard());
 
             p1 = new Player("Jogador 1");
             p2 = new Player("Jogador 2");
             distributecards();
         }
 
-        else recuperateOlderGame(args);
+        else recuperateOlderGame(args[0]);
 	}
 
-	public void recuperateOlderGame(String args[]) throws FileNotFoundException, IOException, ClassNotFoundException
+	public void recuperateOlderGame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-        FileInputStream fi = new FileInputStream(new File(args[0]));
+        FileInputStream fi = new FileInputStream(new File(namefile));
         ObjectInputStream oi = new ObjectInputStream(fi);
 
         deck = (Deck) oi.readObject();
 
         penalty = oi.readInt();
-        current = (Card) oi.readObject();
 
         cardpile = (Deck) oi.readObject();
 
@@ -102,6 +98,7 @@ public class Uno implements Serializable
 	public void playGame(Player p) throws IOException, InterruptedException, ClassNotFoundException
     {
         Scanner choice = new Scanner(System.in);
+        Card current = cardpile.peek();
 
         showBoard(p);
 		int pickchoice;
@@ -116,8 +113,8 @@ public class Uno implements Serializable
 				System.out.println("Penalização: " + penalty);
 				compra(p, penalty);
 				penalty = 0;
-				current = deck.getTopCard();
 				showBoard(p);
+				enterParaContinuar();
 				return;
 			}
 		}
@@ -137,7 +134,7 @@ public class Uno implements Serializable
         {
             compra(p, 1);
             showBoard(p);
-            pause();
+            enterParaContinuar();
         }
         else
         {
@@ -169,7 +166,7 @@ public class Uno implements Serializable
     {
         if (choice == -1) return true;
         if (choice < 0 || choice >= p.getNumCards()) return false;
-        return p.cardAt(choice).canPutThisAbove(current);
+        return p.cardAt(choice).canPutThisAbove(cardpile.peek());
 	}
 
     /**
@@ -182,7 +179,7 @@ public class Uno implements Serializable
 	    Scanner in = new Scanner(System.in);
 	    String opcao;
 
-		System.out.println("Digite s para salvar o jogo ou qualquer outra coisa para continuar......");
+		System.out.println("Digite s para salvar o jogo ou enter para continuar......");
 		opcao = in.nextLine();
 
 		if (opcao.equals("s"))
@@ -200,8 +197,7 @@ public class Uno implements Serializable
 
         // Write objects to file
         o.writeObject(deck);
-        o.writeObject(penalty);
-        o.writeObject(current);
+        o.writeInt(penalty);
         o.writeObject(cardpile);
         o.writeObject(p1);
         o.writeObject(p2);
@@ -236,7 +232,7 @@ public class Uno implements Serializable
 	private boolean canOverride(Player p) {
 		for(int i = 0; i < p.getNumCards(); i++) {
 			if(p.cardAt(i).getPenalty() != 0) {
-				if(p.cardAt(i).getValue() >= current.getValue()) {
+				if(p.cardAt(i).getValue() >= cardpile.peek().getValue()) {
 					return true;
 				}
 			}
@@ -250,7 +246,8 @@ public class Uno implements Serializable
      * Desenha linha de asteriscos.
      */
 	private void decorate() {
-		System.out.println("***********************************************************************************");
+		System.out.println("*********************************************************" +
+                "******");
 	}
 
 	private Card getStartingCard() {
@@ -263,6 +260,8 @@ public class Uno implements Serializable
 		temp = deck.getTopCard();
 		return temp;
 	}
+
+
 
     public boolean gameOver(Player p1,Player p2) {
         if(p1.hasWon()) {
@@ -285,7 +284,7 @@ public class Uno implements Serializable
     {
         cls();
         decorate();
-        System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+current);
+        System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+cardpile.peek());
         decorate();
         showCards(p);
 	    decorate();
@@ -311,5 +310,13 @@ public class Uno implements Serializable
     private void cls() throws IOException, InterruptedException
     {
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+    }
+
+    private void enterParaContinuar()
+    {
+        Scanner in = new Scanner(System.in);
+
+        System.out.println("Digite enter para continuar......");
+        in.nextLine();
     }
 }

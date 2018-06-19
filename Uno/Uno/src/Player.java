@@ -80,29 +80,49 @@ public class Player implements Serializable
 	  * usado no método showboard() na classe Uno
 	  **/
 	public void showCards() {
-        System.out.println("player cards size: " + numCards);
-
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < numCards; i++)
+		for (int line = 0; line < (numCards-1)/8; line++)
+        {
+            for (int i = line * 8; i < (line + 1) * 8; i++)
+                sb.append(" -----  ");
+            sb.append("\n");
+
+            for (int i = line * 8; i < (line + 1) * 8; i++) {
+                sb.append("| ");
+                sb.append(playercards[i].getColorString());
+                sb.append(" | ");
+            }
+            sb.append("\n");
+
+            for (int i = line * 8; i < (line + 1) * 8; i++)
+                sb.append("| ").append(playercards[i].getValueString()).append(" | ");
+            sb.append("\n");
+
+            for (int i = line * 8; i < (line + 1) * 8; i++)
+                sb.append(" -----  ");
+            sb.append("\n");
+        }
+
+		for (int i = 8 * ((numCards-1)/8); i < numCards; i++)
 			sb.append(" -----  ");
 		sb.append("\n");
 
-		for (int i = 0; i < numCards; i++) {
+		for (int i = 8 * ((numCards-1)/8); i < numCards; i++) {
             sb.append("| ");
             sb.append(playercards[i].getColorString());
             sb.append(" | ");
         }
 		sb.append("\n");
 
-		for (int i = 0; i < numCards; i++)
+		for (int i = 8 * ((numCards-1)/8); i < numCards; i++)
 			sb.append("| ").append(playercards[i].getValueString()).append(" | ");
 		sb.append("\n");
 
-		for (int i = 0; i < numCards; i++)
+		for (int i = 8 * ((numCards-1)/8); i < numCards; i++)
 			sb.append(" -----  ");
 		sb.append("\n");
-		
+
 		System.out.print(sb.toString());
 	}
 
