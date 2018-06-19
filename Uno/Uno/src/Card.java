@@ -84,6 +84,16 @@ public class Card implements Serializable
         return valor >= 10;
     }
 
+    public boolean isPula()
+    {
+        return valor == 10;
+    }
+
+    public boolean isTrocaSentido()
+    {
+        return valor == 11;
+    }
+
     public boolean isCoringa() {
         return valor >= 13;
     }

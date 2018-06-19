@@ -6,7 +6,10 @@ public class Uno implements Serializable
 	private Deck deck; // o deck do jogo
 	private Deck cardpile; //quando os jogadores jogam uma carta, ela é empilhada aqui, também, cria um novo deck quando o deck atual estiver vazio
 	private int penalty; // quando cartas especiais são acumuladas  a penalidade acumula, se um jogador não tiver como counterar a carta especial atual, o jogador é penalizado
-	private Player p1, p2; //player 1 and 2
+	private Player[] player; //player 1 and 2
+    private boolean sentido;
+    private int numPlayers;
+    private int currentPlayer;
 
     /**
      * construtor
@@ -22,15 +25,67 @@ public class Uno implements Serializable
         cardpile = new Deck();
         cardpile.addToDeck(getStartingCard());
 
-        p1 = new Player("Jogador 1");
-        p2 = new Player("Jogador 2");
+        player = new Player[numJogadores];
+        for (int i = 1; i <= numJogadores; i++)
+        {
+            player[i-1] = new Player("Jogador " + i);
+        }
+
         distributecards();
 
+        sentido = true;
+        numPlayers = numJogadores;
+        currentPlayer = 0;
 	}
 
 	public Uno (String filename) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         recuperateOlderGame(filename);
+    }
+
+    public void recuperateOlderGame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
+    {
+        FileInputStream fi = new FileInputStream(new File(namefile));
+        ObjectInputStream oi = new ObjectInputStream(fi);
+
+        deck = (Deck) oi.readObject();
+        penalty = oi.readInt();
+        cardpile = (Deck) oi.readObject();
+        sentido = oi.readBoolean();
+        numPlayers = oi.readInt();
+        currentPlayer = oi.readInt();
+
+        for (int i = 0; i < numPlayers; i++)
+        {
+            player[i] = (Player) oi.readObject();
+        }
+
+        oi.close();
+        fi.close();
+    }
+
+    private boolean savegame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
+    {
+        FileOutputStream f = new FileOutputStream(new File(namefile));
+        ObjectOutputStream o = new ObjectOutputStream(f);
+
+        // Write objects to file
+        o.writeObject(deck);
+        o.writeInt(penalty);
+        o.writeObject(cardpile);
+        o.writeBoolean(sentido);
+        o.writeInt(numPlayers);
+        o.writeInt(currentPlayer);
+
+        for (int i = 0; i < numPlayers; i++)
+        {
+            o.writeObject(player[i]);
+        }
+
+        o.close();
+        f.close();
+
+        return true;
     }
 
 	public static int menuInicial () throws InterruptedException, FileNotFoundException, IOException, ClassNotFoundException
@@ -81,12 +136,12 @@ public class Uno implements Serializable
         System.out.println("\n\nEscolha um jogo: ");
         int k = in.nextInt();
 
-        if (k <= 0 || k > fileList.length){
+        while (k <= 1 || k > fileList.length){
             System.out.println("Opção inválida. Tente novamente: ");
             k = in.nextInt();
         }
 
-        return fileList[k].getName();
+        return fileList[k-1].getName();
     }
 
     private static void displaySavedGames(File[] fileList)
@@ -96,7 +151,7 @@ public class Uno implements Serializable
         for (int i = 1; i <= fileList.length; i++)
         {
             s = fileList[i-1].getName();
-            System.out.println(i + s.substring(0, s.length() - 5));
+            System.out.println("\t" + i + ": " + s.substring(0, s.length() - 4));
         }
     }
 
@@ -111,20 +166,7 @@ public class Uno implements Serializable
         } );
     }
 
-	public void recuperateOlderGame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
-    {
-        FileInputStream fi = new FileInputStream(new File(namefile));
-        ObjectInputStream oi = new ObjectInputStream(fi);
 
-        deck = (Deck) oi.readObject();
-        penalty = oi.readInt();
-        cardpile = (Deck) oi.readObject();
-        p1 = (Player) oi.readObject();
-        p2 = (Player) oi.readObject();
-
-        oi.close();
-        fi.close();
-    }
 
 	/**
 	 *  esse método simula turnos entre os dois jogadores. quando o turno é par, jogar 1 joga, quando o turno é impar jogador 2 joga.
@@ -132,29 +174,26 @@ public class Uno implements Serializable
      */
 	public void game() throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException
     {
-		int turn = 0;
-		Player currentPlayer;
 		do
         {
-            if(turn%2==0) currentPlayer = p1;
-            else currentPlayer = p2;
+            setNextPlayer();
 
             cls();
-            System.out.println("Proximo jogador: \n\n\n\n\n\n" + currentPlayer.getName());
+            System.out.println("Proximo jogador: \n\n\n\n\n\n" + player[currentPlayer].getName());
             pause();
 
-            playGame(currentPlayer);
-			turn++;
-		} while(!gameOver(p1,p2));
+            playGame();
+		} while(!gameOver());
 	}
-	
-	
+
 	private void distributecards()
     {
 		for(int i=0;i<7;i++)
 		{
-            p1.add(deck.getTopCard());
-            p2.add(deck.getTopCard());
+		    for (int j=0; j < numPlayers; j++)
+            {
+                player[j].add(deck.getTopCard());
+            }
 		}
 	}
 
@@ -163,25 +202,24 @@ public class Uno implements Serializable
      *  este metodo pega o jogador atual como parametro
      *  esse método contem o processo do jogo
      */
-	public void playGame(Player p) throws IOException, InterruptedException, ClassNotFoundException
+	public void playGame() throws IOException, InterruptedException, ClassNotFoundException
     {
         Scanner choice = new Scanner(System.in);
         Card current = cardpile.peek();
+        Player p = player[currentPlayer];
 
-        showBoard(p);
+        showBoard();
 		int pickchoice;
 
-		if(current.getPenalty() > 0)
+		if(penalty > 0)
 		{
-            penalty += current.getPenalty();
-
 			if(!canOverride(p))
 			{
 				System.out.println("Você não tem nenhuma carta para jogar contra a carta especial atual, sendo assim você sofrerá a penalização");
 				System.out.println("Penalização: " + penalty);
 				compra(p, penalty);
 				penalty = 0;
-				showBoard(p);
+				showBoard();
 				enterParaContinuar();
 				return;
 			}
@@ -201,15 +239,15 @@ public class Uno implements Serializable
         if (pickchoice == -1)
         {
             compra(p, 1);
-            showBoard(p);
+            showBoard();
             enterParaContinuar();
         }
         else
         {
             Card play = p.remove(pickchoice);
             p.sayUno();
-            current = play;
-            cardpile.addToDeck(current);
+            cardpile.addToDeck(play);
+            penalty += play.getPenalty();
             if (play.isCoringa())
             {
                 System.out.println("Carta jogada é um curinga. Escolha uma cor (1 - red, 2 - green, 3 - blue, 4 - yellow): ");
@@ -223,8 +261,20 @@ public class Uno implements Serializable
 
                 play.setCor(cor);
             }
+            else if (play.isTrocaSentido()) trocaSentido();
+            else if (play.isPula()) setNextPlayer();
         }
 	}
+
+	private void setNextPlayer()
+    {
+
+    }
+
+	private void trocaSentido()
+    {
+        sentido = !sentido;
+    }
 
     /**
      * Verifica se a escolha do jogador foi valida ou não
@@ -258,23 +308,7 @@ public class Uno implements Serializable
         }
 	}
 
-	private boolean savegame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
-    {
-        FileOutputStream f = new FileOutputStream(new File(namefile));
-        ObjectOutputStream o = new ObjectOutputStream(f);
 
-        // Write objects to file
-        o.writeObject(deck);
-        o.writeInt(penalty);
-        o.writeObject(cardpile);
-        o.writeObject(p1);
-        o.writeObject(p2);
-
-        o.close();
-        f.close();
-
-        return true;
-    }
 
 	private boolean compra (Player p, int penalty)
     {
@@ -331,48 +365,45 @@ public class Uno implements Serializable
 
 
 
-    public boolean gameOver(Player p1,Player p2) {
-        if(p1.hasWon()) {
-            System.out.println("**************************************************");
-            System.out.println("Jogador 1 venceu");
-            System.out.println("**************************************************");
-            return true;
+    public boolean gameOver() throws IOException, InterruptedException
+    {
+	    for (int i = 0; i < numPlayers; i++)
+        {
+            if (player[i].hasWon())
+            {
+                cls();
+                decorate();
+                System.out.println("Jogador 1 venceu");
+                decorate();
+
+                return true;
+            }
         }
 
-        else if(p2.hasWon()) {
-            System.out.println("**************************************************");
-            System.out.println("Jogador 1 venceu");
-            System.out.println("**************************************************");
-            return true;
-        }
         return false;
     }
 
-    public void showBoard(Player p) throws IOException, InterruptedException
+    public void showBoard() throws IOException, InterruptedException
     {
         cls();
         decorate();
-        System.out.println(p.getName() + ", É seu turno\nA carta atual na mesa é:\n"+cardpile.peek());
+        System.out.println(player[currentPlayer].getName() + ", É seu turno\nA carta atual na mesa é:\n"+cardpile.peek());
         decorate();
-        showCards(p);
+        showCards();
 	    decorate();
     }
 
-    private void showCards (Player p) throws IOException, InterruptedException
+    private void showCards () throws IOException, InterruptedException
     {
-        if(p == p1) {
-            System.out.println("                Jogador 1");
-            p1.showCards();
-            p2.hideCards();
-            System.out.println("                Jogador 2\n");
-        }
-        else
+        for (int i = 0; i < numPlayers; i++)
         {
-            System.out.println("                Jogador 1");
-            p1.hideCards();
-            p2.showCards();
-            System.out.println("                Jogador 2\n");
+            if (i != currentPlayer)
+            {
+                System.out.println("Jogador " + i + ": " + player[i].hiddenCards() + "\n");
+            }
         }
+
+        player[currentPlayer].revealedCards();
     }
 
     private static void cls() throws IOException, InterruptedException

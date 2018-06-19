@@ -60,10 +60,11 @@ public class Player implements Serializable
 		return playercards;
 	}
 
+    /**
+     * jogador diz Uno quando tiver apenas uma carta na mão
+     */
 	public void sayUno() {
-		/*
-		 * jogador diz Uno quando tiver apenas uma carta na mão 
-		 */
+
 		Scanner s = new Scanner(System.in);
 		
 		if (numCards==1)
@@ -79,7 +80,7 @@ public class Player implements Serializable
 	  * apenas para fazer as cartas ficarem um pouco mais parecidas com cartas hahaha
 	  * usado no método showboard() na classe Uno
 	  **/
-	public void showCards() {
+	public String revealedCards() {
 		StringBuilder sb = new StringBuilder();
 
 		for (int line = 0; line < (numCards-1)/8; line++)
@@ -123,33 +124,20 @@ public class Player implements Serializable
 			sb.append(" -----  ");
 		sb.append("\n");
 
-		System.out.print(sb.toString());
+		return sb.toString();
 	}
 
 	/**
 	  * esconde cartas do jogador
 	  * usado no método showboard() na classe Uno
 	  **/
-	public void hideCards() {
+	public String hiddenCards() {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < numCards; i++)
-			sb.append(" -----  ");
-		sb.append("\n");
+			sb.append("[] ");
 
-		for (int i = 0; i < numCards; i++)
-			sb.append("|     | ");
-		sb.append("\n");
-
-		for (int i = 0; i < numCards; i++)
-			sb.append("|     | ");
-		sb.append("\n");
-
-		for (int i = 0; i < numCards; i++)
-			sb.append(" -----  ");
-		sb.append("\n");
-
-		System.out.print(sb.toString());
+		return sb.toString();
 	}
 
 	/**
