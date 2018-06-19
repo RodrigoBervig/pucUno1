@@ -267,7 +267,12 @@ public class Uno implements Serializable
 
 	private void setNextPlayer()
     {
-
+        if (sentido) currentPlayer = (currentPlayer + 1) % numPlayers;
+        else
+        {
+            if (currentPlayer == 0) currentPlayer = numPlayers;
+            currentPlayer--;
+        }
     }
 
 	private void trocaSentido()
@@ -362,8 +367,6 @@ public class Uno implements Serializable
 		return temp;
 	}
 
-
-
     public boolean gameOver() throws IOException, InterruptedException
     {
 	    for (int i = 0; i < numPlayers; i++)
@@ -372,7 +375,7 @@ public class Uno implements Serializable
             {
                 cls();
                 decorate();
-                System.out.println("Jogador " + i + " venceu");
+                System.out.println(player[i].getName() + " venceu");
                 decorate();
 
                 return true;
@@ -398,8 +401,9 @@ public class Uno implements Serializable
         {
             if (i != currentPlayer)
             {
-                System.out.print("Jogador " + (i+1) + ": ");
+                System.out.print(player[i].getName() + ": ");
                 player[i].hideCards();
+                System.out.println();
             }
         }
 
