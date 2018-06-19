@@ -26,16 +26,15 @@ public class Uno implements Serializable
         cardpile.addToDeck(getStartingCard());
 
         player = new Player[numJogadores];
-        for (int i = 1; i <= numJogadores; i++)
+        for (int i = 0; i < numJogadores; i++)
         {
-            player[i-1] = new Player("Jogador " + i);
+            player[i] = new Player("Jogador " + (i+1));
         }
-
-        distributecards();
 
         sentido = true;
         numPlayers = numJogadores;
         currentPlayer = 0;
+        distributecards();
 	}
 
 	public Uno (String filename) throws FileNotFoundException, IOException, ClassNotFoundException
@@ -113,7 +112,7 @@ public class Uno implements Serializable
         if (opcao == 2 && length > 0) return 0;
         else
         {
-            if (length == 0) System.out.println("Não há jogos salvos.");
+            if (opcao == 2 && length == 0) System.out.println("Não há jogos salvos.");
             System.out.println("Digite o número de jogadores para uma nova partida: ");
             numJogadores = in.nextInt();
             while (numJogadores < 2 || numJogadores >5)
@@ -188,7 +187,7 @@ public class Uno implements Serializable
 
 	private void distributecards()
     {
-		for(int i=0;i<7;i++)
+		for(int i=0; i<7 ;i++)
 		{
 		    for (int j=0; j < numPlayers; j++)
             {
@@ -373,7 +372,7 @@ public class Uno implements Serializable
             {
                 cls();
                 decorate();
-                System.out.println("Jogador 1 venceu");
+                System.out.println("Jogador " + i + " venceu");
                 decorate();
 
                 return true;
@@ -399,11 +398,13 @@ public class Uno implements Serializable
         {
             if (i != currentPlayer)
             {
-                System.out.println("Jogador " + i + ": " + player[i].hiddenCards() + "\n");
+                System.out.print("Jogador " + (i+1) + ": ");
+                player[i].hideCards();
             }
         }
 
-        player[currentPlayer].revealedCards();
+        System.out.println("Seu baralho:");
+        player[currentPlayer].showCards();
     }
 
     private static void cls() throws IOException, InterruptedException

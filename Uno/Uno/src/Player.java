@@ -80,7 +80,7 @@ public class Player implements Serializable
 	  * apenas para fazer as cartas ficarem um pouco mais parecidas com cartas hahaha
 	  * usado no método showboard() na classe Uno
 	  **/
-	public String revealedCards() {
+	public void showCards() {
 		StringBuilder sb = new StringBuilder();
 
 		for (int line = 0; line < (numCards-1)/8; line++)
@@ -124,20 +124,20 @@ public class Player implements Serializable
 			sb.append(" -----  ");
 		sb.append("\n");
 
-		return sb.toString();
+		System.out.println(sb.toString());
 	}
 
 	/**
 	  * esconde cartas do jogador
 	  * usado no método showboard() na classe Uno
 	  **/
-	public String hiddenCards() {
+	public void hideCards() {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < numCards; i++)
 			sb.append("[] ");
 
-		return sb.toString();
+		System.out.println(sb.toString());
 	}
 
 	/**
