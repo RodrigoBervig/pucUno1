@@ -204,16 +204,13 @@ public class Uno implements Serializable
 
 		if(penalty > 0)
 		{
-			if(!canOverride(p))
-			{
-				System.out.println("Você não tem nenhuma carta para jogar contra a carta especial atual, sendo assim você sofrerá a penalização");
-				System.out.println("Penalização: " + penalty);
-				compra(p, penalty);
-				penalty = 0;
-				showBoard();
-				enterParaContinuar();
-				return;
-			}
+		    System.out.println("Penalização: " + penalty);
+		    enterParaContinuar();
+		    compra(p, penalty);
+		    penalty = 0;
+		    showBoard();
+		    enterParaContinuar();
+		    return;
 		}
 
         if (!p.hasCardToPutAbove(current))
@@ -323,22 +320,6 @@ public class Uno implements Serializable
 
         return true;
     }
-
-    /**
-     * Verifica se o jogador possuir alguma carta especial de compra.
-     */
-	private boolean canOverride(Player p) {
-		for(int i = 0; i < p.getNumCards(); i++) {
-			if(p.cardAt(i).getPenalty() != 0) {
-				if(p.cardAt(i).getValue() >= cardpile.peek().getValue()) {
-					return true;
-				}
-			}
-		}
-		
-		
-		return false;
-	}
 
     /**
      * Desenha linha de asteriscos.

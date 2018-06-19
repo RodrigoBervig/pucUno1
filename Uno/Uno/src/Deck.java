@@ -19,41 +19,54 @@ public class Deck implements Serializable
             numCards = 0;
 		}
 
-		public void inicializa()
-        {
-            preenche();
-            shuffle();
-        }
+    /**
+     * Enche o baralho e o embaralha
+     */
+    public void inicializa()
+    {
+        preenche();
+        shuffle();
+    }
 
-		public void addToDeck(Card card)
-        {
-            this.deck[numCards] = card;
-            numCards++;
-        }
+    /**
+     * Adiciona ao deck a carta que for passada
+     * @param card Carta a ser acrescentada
+     */
+    public void addToDeck(Card card)
+    {
+        this.deck[numCards] = card;
+        numCards++;
+    }
 
-		private void preenche() {
-            // cartas normais
-            for (int cor = 1; cor <= 4; cor++)
+    /**
+     * Adiciona ao deck todas as cartas possíveis
+     */
+    private void preenche() {
+        // cartas normais
+        for (int cor = 1; cor <= 4; cor++)
+        {
+            addToDeck(new Card(0, cor));
+            addToDeck(new Card(13, 0));
+            addToDeck(new Card(14, 0));
+            for (int numero = 1; numero <= 12; numero++)
             {
-                addToDeck(new Card(0, cor));
-                addToDeck(new Card(13, 0));
-                addToDeck(new Card(14, 0));
-                for (int numero = 1; numero <= 12; numero++)
-                {
-                    addToDeck(new Card(numero, cor));
-                    addToDeck(new Card(numero, cor));
-                }
+                addToDeck(new Card(numero, cor));
+                addToDeck(new Card(numero, cor));
             }
         }
+    }
 
-		/** Checa o tamanho do deck, se for maior que zero, retorna false,
-         *  se não, retorna true.
-         */
-		public boolean isEmpty() { //
-		    return numCards==0;
-		}
+    /**
+     * Checa o tamanho do deck, se for maior que zero, retorna false, se não, retorna true.
+     * @return True se o deck for vazio, False, caso contrário
+     */
+    public boolean isEmpty(){ //
+        return numCards==0;
+    }
 
-		/** Embaralha o deck*/
+    /**
+     *
+     */
 		public void shuffle(){
 		    Random rd = new Random();
 		    int i, j;
