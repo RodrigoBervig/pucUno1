@@ -53,11 +53,8 @@ public class Uno implements Serializable
         sentido = oi.readBoolean();
         numPlayers = oi.readInt();
         currentPlayer = oi.readInt();
+        player = (Player[]) oi.readObject();
 
-        for (int i = 0; i < numPlayers; i++)
-        {
-            player[i] = (Player) oi.readObject();
-        }
 
         oi.close();
         fi.close();
@@ -75,11 +72,7 @@ public class Uno implements Serializable
         o.writeBoolean(sentido);
         o.writeInt(numPlayers);
         o.writeInt(currentPlayer);
-
-        for (int i = 0; i < numPlayers; i++)
-        {
-            o.writeObject(player[i]);
-        }
+        o.writeObject(player);
 
         o.close();
         f.close();
@@ -135,7 +128,7 @@ public class Uno implements Serializable
         System.out.println("\n\nEscolha um jogo: ");
         int k = in.nextInt();
 
-        while (k <= 1 || k > fileList.length){
+        while (k < 1 || k > fileList.length){
             System.out.println("Opção inválida. Tente novamente: ");
             k = in.nextInt();
         }
@@ -173,16 +166,15 @@ public class Uno implements Serializable
      */
 	public void game() throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException
     {
-		do
+		while(!gameOver())
         {
-            setNextPlayer();
-
             cls();
             System.out.println("Proximo jogador: \n\n\n\n\n\n" + player[currentPlayer].getName());
             pause();
 
             playGame();
-		} while(!gameOver());
+            setNextPlayer();
+		}
 	}
 
 	private void distributecards()
