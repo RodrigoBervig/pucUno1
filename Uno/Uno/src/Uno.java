@@ -367,7 +367,7 @@ public class Uno implements Serializable
     }
 
     /**
-     * Desenha linha de asteriscos.
+     * desenha linha de asteriscos.
      */
 	private static void decorate() {
 		System.out.println("*********************************************************" +
@@ -449,9 +449,30 @@ public class Uno implements Serializable
         player[currentPlayer].showCards();
     }
 
-    private static void cls() throws IOException, InterruptedException
+    /**
+     * limpa a tela
+     * funciona tanto para windows quanto para mac
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public final static void cls() throws IOException, InterruptedException
     {
-        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+        try
+        {
+            final String os = System.getProperty("os.name");
+
+            if (os.contains("Windows"))
+            {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+
+            }
+            else
+            {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        }
+        catch (final Exception e){}
     }
 
     /**
