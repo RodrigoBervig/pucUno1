@@ -14,7 +14,8 @@ public class Deck implements Serializable
          * cada cor tem 2 cópias da mesma carta, exceto pelo 0 (aparece apenas um vez por cor)
          * Por exemplo: Verde tem duas cartas de numero 1, mas apenas uma de numero 0
          */
-		public Deck() {
+		public Deck()
+        {
             deck = new Card[108];
             numCards = 0;
 		}
@@ -41,7 +42,8 @@ public class Deck implements Serializable
     /**
      * Adiciona ao deck todas as cartas possíveis
      */
-    private void preenche() {
+    private void preenche()
+    {
         // cartas normais
         for (int cor = 1; cor <= 4; cor++)
         {
@@ -60,57 +62,72 @@ public class Deck implements Serializable
      * Checa o tamanho do deck, se for maior que zero, retorna false, se não, retorna true.
      * @return True se o deck for vazio, False, caso contrário
      */
-    public boolean isEmpty(){ //
+    public boolean isEmpty()
+    {
         return numCards==0;
     }
 
     /**
-     *
+     *Embaralha o deck
      */
-		public void shuffle(){
-		    Random rd = new Random();
-		    int i, j;
-
-		    for (int k = 0; k < 1000; k++)
-            {
-                i = rd.nextInt(108);
-                j = rd.nextInt(108);
-                swap(i, j);
-            }
-		}
-
-		private void swap (int i, int j)
+    public void shuffle()
+    {
+        Random rd = new Random();
+        int i, j;
+        for (int k = 0; k < 1000; k++)
         {
-            Card aux = deck[i];
-            deck[i] = deck[j];
-            deck[j] = aux;
+            i = rd.nextInt(108);
+            j = rd.nextInt(108);
+            swap(i, j);
         }
+    }
 
-        /**Recebe a carta mais alta de um baralho invertido*/
-		public Card getTopCard()
+    /**
+     * Troca duas cartas do deck de lugar.
+     * @param i a posicao da primeira carta
+     * @param j a posicao da segunda carta
+     */
+    private void swap (int i, int j)
+    {
+        Card aux = deck[i];
+        deck[i] = deck[j];
+        deck[j] = aux;
+    }
+
+    /**
+     * Tira a carta de cima do baralho
+     * @return essa carta, se houver, e, caso contrário, retorna null
+     */
+    public Card getTopCard()
+    {
+        if (numCards <= 0) return null;
+        Card c = deck[numCards - 1];
+        deck[numCards - 1] = null;
+        numCards --;
+        return c;
+    }
+
+    /**
+     * Vê a última carta do baralho, se houver.
+     * @return a carta, ou null se não existir
+     */
+		public Card peek()
         {
-            if (numCards <= 0) return null;
-
-            Card c = deck[numCards - 1];
-            deck[numCards - 1] = null;
-            numCards --;
-
-            return c;
-		}
-		
-		public Card peek() {
 		    if (numCards <= 0) return null;
 			return deck[numCards-1];
 		}
 
-		public String toString() {
-			StringBuilder sb = new StringBuilder();
-
-			for(Card c:this.deck)
-            {
-				sb.append(c);
-			}
-
-			return sb.toString();
-		}
+    /**
+     * Escreve todas as cartas do deck, em um quadrado
+     * @return string com quadrados com cartas dentro.
+     */
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        for(Card c:this.deck)
+        {
+            sb.append(c);
+        }
+        return sb.toString();
+    }
 }

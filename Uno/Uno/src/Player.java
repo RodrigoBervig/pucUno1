@@ -25,6 +25,11 @@ public class Player implements Serializable
 		return numCards;
 	}
 
+    /**
+     * adiciona uma carta na mão do jogador
+     * @param c carta a ser adicionada
+     * @return true se for possivel, false caso contrário
+     */
 	public boolean add (Card c)
     {
         if (numCards < 0 || c == null) return false;
@@ -34,6 +39,11 @@ public class Player implements Serializable
         return true;
     }
 
+    /**
+     * remove uma carta da mão do jogador
+     * @param i a posição da carta a ser removida
+     * @return true se for possível, false caso contrário
+     */
     public Card remove (int i)
     {
         if (numCards < 0 || i < 0 || i >= numCards) return null;
@@ -51,14 +61,6 @@ public class Player implements Serializable
 
         return c;
     }
-
-    /**
-     * Retorna todas as cartas que o jogador possui na mão como um ArrayList
-     * Isso é usado para chegar se o jogador tem alguma carta valida para jogar
-     */
-	public Card[] PlayerCards(){
-		return playercards;
-	}
 
     /**
      * jogador diz Uno quando tiver apenas uma carta na mão
@@ -81,12 +83,12 @@ public class Player implements Serializable
 	  * usado no método showboard() na classe Uno
 	  **/
 	public void showCards() {
-		StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
-		for (int line = 0; line < (numCards-1)/8; line++)
-        {
-            for (int i = line * 8; i < (line + 1) * 8; i++)
+        for (int line = 0; line < (numCards - 1) / 8; line++) {
+            for (int i = line * 8; i < (line + 1) * 8; i++) {
                 sb.append(" -----  ");
+            }
             sb.append("\n");
 
             for (int i = line * 8; i < (line + 1) * 8; i++) {
@@ -96,32 +98,39 @@ public class Player implements Serializable
             }
             sb.append("\n");
 
-            for (int i = line * 8; i < (line + 1) * 8; i++)
+            for (int i = line * 8; i < (line + 1) * 8; i++) {
                 sb.append("| ").append(playercards[i].getValueString()).append(" | ");
+            }
             sb.append("\n");
 
-            for (int i = line * 8; i < (line + 1) * 8; i++)
+            for (int i = line * 8; i < (line + 1) * 8; i++) {
                 sb.append(" -----  ");
+            }
             sb.append("\n");
         }
 
-		for (int i = 8 * ((numCards-1)/8); i < numCards; i++)
-			sb.append(" -----  ");
-		sb.append("\n");
+        for (int i = 8 * ((numCards - 1) / 8); i < numCards; i++) {
+            sb.append(" -----  ");
+        }
+        sb.append("\n");
 
-		for (int i = 8 * ((numCards-1)/8); i < numCards; i++) {
+        for (int i = 8 * ((numCards - 1) / 8); i < numCards; i++) {
             sb.append("| ");
             sb.append(playercards[i].getColorString());
             sb.append(" | ");
         }
+        sb.append("\n");
+
+        for (int i = 8 * ((numCards - 1) / 8); i < numCards; i++)
+        {
+            sb.append("| ").append(playercards[i].getValueString()).append(" | ");
+        }
 		sb.append("\n");
 
 		for (int i = 8 * ((numCards-1)/8); i < numCards; i++)
-			sb.append("| ").append(playercards[i].getValueString()).append(" | ");
-		sb.append("\n");
-
-		for (int i = 8 * ((numCards-1)/8); i < numCards; i++)
-			sb.append(" -----  ");
+		{
+            sb.append(" -----  ");
+        }
 		sb.append("\n");
 
 		System.out.println(sb.toString());
@@ -135,25 +144,35 @@ public class Player implements Serializable
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < numCards; i++)
-			sb.append("[] ");
+		{
+            sb.append("[] ");
+        }
 
 		System.out.println(sb.toString());
 	}
 
-	/**
-	 * verifica se o jogador venceu ou não
-	 */
+
+    /**
+     * verifica se o jogador ganhou o jogo
+     * @return true caso tiver ganhado
+     */
 	public boolean hasWon() {
 		return numCards==0;
 	}
 
 	/**
 	 * Representação do jogador em texto
+     * @return String com o nome
 	 */
 	public String getName() {
 		return this.name;
 	}
-	
+
+    /**
+     * acessa a carta da posição
+     * @param i a posição a ser acessada
+     * @return a carta da posição, ou null se a posicao for inválida
+     */
 	public Card cardAt(int i)
     {
         if (i < 0 || i >= numCards) return null;
@@ -161,6 +180,11 @@ public class Player implements Serializable
         return playercards[i];
     }
 
+    /**
+     * verifica se o jogador possue carta válida para jogar na mesa
+     * @param current a carta do topo da mesa
+     * @return true se ele pode jogar alguma carta, false se ele não pode
+     */
     public boolean hasCardToPutAbove (Card current)
     {
         for (int i = 0; i < getNumCards(); i++)

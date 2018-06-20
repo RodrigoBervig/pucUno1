@@ -12,9 +12,9 @@ public class Uno implements Serializable
     private int currentPlayer;
 
     /**
-     * construtor
-     * constroi o jogo
-     * prepara o jogo para jogar
+     * cria um jogo Uno, com o número específico de jogadores
+     * cria um baralho de 108 cartas, embaralha-o e distribui as cartas
+     * @param numJogadores o número de jogadores
      */
 	public Uno(int numJogadores)
     {
@@ -37,11 +37,25 @@ public class Uno implements Serializable
         distributecards();
 	}
 
+    /**
+     * cria um jogo Uno do arquivo-texto
+     * @param filename o nome do arqiuivo
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
 	public Uno (String filename) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         recuperateOlderGame(filename);
     }
 
+    /**
+     * recupera as informações de um jogo antigo do arquivo texto
+     * @param namefile nome do aquivo texto
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public void recuperateOlderGame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         FileInputStream fi = new FileInputStream(new File(namefile));
@@ -55,11 +69,18 @@ public class Uno implements Serializable
         currentPlayer = oi.readInt();
         player = (Player[]) oi.readObject();
 
-
         oi.close();
         fi.close();
     }
 
+    /**
+     * salva o jogo no arquivo
+     * @param namefile o nome do arquivo
+     * @return true se for possível salvar, false caso contrário
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     private boolean savegame(String namefile) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         FileOutputStream f = new FileOutputStream(new File(namefile));
@@ -80,6 +101,14 @@ public class Uno implements Serializable
         return true;
     }
 
+    /**
+     * exibe menu inicial, com opções de jogo, lendo a opção escolhida
+     * @return zero caso jogador queira pegar um jogo antigo, ou o número de jogadores, caso queira criar um jogo novo
+     * @throws InterruptedException
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
 	public static int menuInicial () throws InterruptedException, FileNotFoundException, IOException, ClassNotFoundException
     {
         Scanner in = new Scanner(System.in);
@@ -117,6 +146,10 @@ public class Uno implements Serializable
         }
     }
 
+    /**
+     * pergunta qual jogo salvo o jogador quer esolher
+     * @return o nome do arquivo escolhido
+     */
 	public static String askFilename()
     {
         Scanner in = new Scanner (System.in);
@@ -136,6 +169,10 @@ public class Uno implements Serializable
         return fileList[k-1].getName();
     }
 
+    /**
+     * exibe na tela uma lista de jogos salvos
+     * @param fileList a lista de arquivos
+     */
     private static void displaySavedGames(File[] fileList)
     {
         String s;
@@ -147,6 +184,10 @@ public class Uno implements Serializable
         }
     }
 
+    /**
+     * procura na pasta atual arquivos com extensão .uno
+     * @return a lista com arquivos
+     */
 	private static File[] findSavedGamesOnFolder()
     {
         String workingDirectory = System.getProperty("user.dir");
@@ -155,14 +196,11 @@ public class Uno implements Serializable
         return dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String filename)
             { return filename.endsWith(".uno"); }
-        } );
+        });
     }
 
-
-
 	/**
-	 *  esse método simula turnos entre os dois jogadores. quando o turno é par, jogar 1 joga, quando o turno é impar jogador 2 joga.
-	 *  this method simulates turns between the two players. when turn is even, player 1 plays and when
+	 *  esse método simula turnos entre os jogadores.
      */
 	public void game() throws FileNotFoundException, IOException, ClassNotFoundException, InterruptedException
     {
@@ -177,6 +215,9 @@ public class Uno implements Serializable
 		}
 	}
 
+    /**
+     * distrubui as sete cartas entre os jogadores
+     */
 	private void distributecards()
     {
 		for(int i=0; i<7 ;i++)
@@ -281,7 +322,7 @@ public class Uno implements Serializable
 	}
 
     /**
-     *Cria uma pausa
+     * Cria uma pausa
      * pergunta ao usuario se deseja continuar
      * feito apenas para aumentar a interatividade com o usuário
      */
@@ -301,8 +342,12 @@ public class Uno implements Serializable
         }
 	}
 
-
-
+    /**
+     * compra o número de cartas específico, do jogador
+     * @param p o jogador
+     * @param penalty número de cartas
+     * @return true, caso for possível
+     */
 	private boolean compra (Player p, int penalty)
     {
         Card pick;
@@ -329,6 +374,10 @@ public class Uno implements Serializable
                 "******");
 	}
 
+    /**
+     * pega a primeira carta não especial
+     * @return a carta
+     */
 	private Card getStartingCard() {
 		Card temp = deck.peek();
 		while(temp.isSpecial()) {
@@ -340,6 +389,12 @@ public class Uno implements Serializable
 		return temp;
 	}
 
+    /**
+     * verifica se algum jogador ganhou o jogo, imprimindo mensagem na tela
+     * @return true se alguem tiver ganhado, false caso contrário
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public boolean gameOver() throws IOException, InterruptedException
     {
 	    for (int i = 0; i < numPlayers; i++)
@@ -358,6 +413,11 @@ public class Uno implements Serializable
         return false;
     }
 
+    /**
+     * exibe a tela do jogador da vez
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void showBoard() throws IOException, InterruptedException
     {
         cls();
@@ -368,6 +428,11 @@ public class Uno implements Serializable
 	    decorate();
     }
 
+    /**
+     * exibe as cartas do jogador atual e esconde as cartas do jogador da vez passada
+     * @throws IOException
+     * @throws InterruptedException
+     */
     private void showCards () throws IOException, InterruptedException
     {
         for (int i = 0; i < numPlayers; i++)
@@ -389,6 +454,9 @@ public class Uno implements Serializable
         new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
     }
 
+    /**
+     * espera o enter do usuario para continuar
+     */
     private void enterParaContinuar()
     {
         Scanner in = new Scanner(System.in);

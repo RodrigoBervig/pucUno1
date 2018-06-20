@@ -31,7 +31,8 @@ public class Card implements Serializable
      * @param valor valor (inteiro) da carta
      * @param cor   a cor da carta (inteiro).
      */
-	public Card(int valor, int cor) {
+	public Card(int valor, int cor)
+    {
 		setCor(cor);
 		setValor(valor);
 	}
@@ -40,7 +41,8 @@ public class Card implements Serializable
      * Muda cor da carta
      * @param cor
      */
-    public void setCor(int cor) {
+    public void setCor(int cor)
+    {
         if(cor >= 0 && cor <= 4)
             this.cor = cor;
     }
@@ -49,7 +51,8 @@ public class Card implements Serializable
      * Muda o valor da carta
      * @param valor
      */
-    private void setValor(int valor){
+    private void setValor(int valor)
+    {
         if(valor >= 0 && valor <=14) this.valor = valor;
     }
 
@@ -78,7 +81,8 @@ public class Card implements Serializable
      * Retorna o valor da carta
      * @return Valor da carta
      */
-	public int getValue(){
+	public int getValue()
+    {
         return this.valor;
 	}
 
@@ -129,15 +133,17 @@ public class Card implements Serializable
      * Checa se a carta é do tipo coringa
      * @return True se for, False se não for
      */
-    public boolean isCoringa() {
+    public boolean isCoringa()
+    {
         return valor >= 13;
     }
 
     /**
      * Escreve na tela a cor e o valor da carta, dentro de um quadrado
-     * @return Quadrado com valor e cor da carta
+     * @return quadrado com valor e cor da carta.
      */
-    public String toString() {
+    public String toString()
+    {
         return " ----- \n| " + this.getColorString() + " |\n| " +
                 this.getValueString() + " | \n ----- \n";
 	}
