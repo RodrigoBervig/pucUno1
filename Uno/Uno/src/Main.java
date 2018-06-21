@@ -1,11 +1,7 @@
 import java.io.IOException;
 import java.io.Serializable;
 
-/**
- * Felipe Bach
- * 10/06/2018
- * Jogo Uno Simples, para dois jogadores
- */
+
 public class Main implements Serializable
 {
     /**
