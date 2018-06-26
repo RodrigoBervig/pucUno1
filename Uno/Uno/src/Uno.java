@@ -208,7 +208,8 @@ public class Uno implements Serializable
         {
             cls();
             System.out.println("Proximo jogador: \n\n\n\n\n\n" + player[currentPlayer].getName());
-            pause();
+            if(pauseOrQuit()) return;
+
 
             playGame();
             setNextPlayer();
@@ -245,7 +246,7 @@ public class Uno implements Serializable
 
 		if(penalty > 0)
 		{
-		    System.out.println("Penalização: " + penalty);
+		    System.out.println("Penalização: você recebe " + penalty + " cartas.");
 		    enterParaContinuar();
 		    compra(p, penalty);
 		    penalty = 0;
@@ -254,14 +255,13 @@ public class Uno implements Serializable
 		    return;
 		}
 
-        if (!p.hasCardToPutAbove(current))
-            System.out.println("Você não possui nenhuma carta valida para jogar, então tera de comprar cartas.");
-        System.out.println("Por favor, escolha uma carta (digite zero para comprar): ");
+        if (!p.hasCardToPutAbove(current)) System.out.println("Digite 0. Você não possui nenhuma carta valida para jogar, então terá de comprar cartas.");
+        else System.out.println("Por favor, escolha uma carta (digite 0 para comprar): ");
 
         pickchoice = choice.nextInt()-1;
         while(!isValidChoice(p,pickchoice))
         {
-            System.out.println("Escolha invalida! Por favor, tente novamente: ");
+            System.out.println("Escolha inválida! Por favor, tente novamente: ");
             pickchoice = choice.nextInt()-1;
         }
 
@@ -284,7 +284,7 @@ public class Uno implements Serializable
 
                 if (cor < 1 || cor > 4)
                 {
-                    System.out.println("Opcao invalida! Tente novamente.");
+                    System.out.println("Opcao inválida! Tente novamente.");
                     cor = choice.nextInt();
                 }
 
@@ -322,24 +322,25 @@ public class Uno implements Serializable
 	}
 
     /**
-     * Cria uma pausa
-     * pergunta ao usuario se deseja continuar
-     * feito apenas para aumentar a interatividade com o usuário
+     * pausa
+     * pergunta ao usuario se deseja salvar, sair, ou continuar
+     * @return true se o usuário desejar sair, false se quiser ou salvar, ou continuar.
      */
-	private void pause() throws FileNotFoundException, IOException, ClassNotFoundException
+	private boolean pauseOrQuit() throws FileNotFoundException, IOException, ClassNotFoundException
     {
 	    Scanner in = new Scanner(System.in);
 	    String opcao;
 
-		System.out.println("Digite s para salvar o jogo ou enter para continuar......");
+		System.out.println("Digite s para Salvar o jogo, q para Sair, ou enter para Continuar......");
 		opcao = in.nextLine();
 
 		if (opcao.equals("s"))
         {
-            System.out.println("Digite um nome para esse save: ");
+            System.out.println("Digite um nome para esse Save: ");
             opcao = in.nextLine();
             savegame(opcao + ".uno");
         }
+        return(opcao.equals("q"));
 	}
 
     /**
