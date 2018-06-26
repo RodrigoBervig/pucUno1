@@ -28,7 +28,7 @@ public class Uno implements Serializable
         player = new Player[numJogadores];
         for (int i = 0; i < numJogadores; i++)
         {
-            player[i] = new Player("Jogador " + (i+1));
+            player[i] = new Player("JOGADOR " + (i+1));
         }
 
         sentido = true;
@@ -120,7 +120,7 @@ public class Uno implements Serializable
         decorate();
         System.out.println("\n\n\n");
 
-        System.out.println("Menu\n\t1: novo jogo\n\t2: carregar jogo antigo\n\nEscolha uma opção: ");
+        System.out.println("\t\tMENU\n\t1: Novo jogo\n\t2: Carregar jogo antigo\n\nEscolha uma opção: ");
         opcao = in.nextInt();
 
         while (opcao != 1 && opcao != 2)
@@ -207,7 +207,7 @@ public class Uno implements Serializable
 		while(!gameOver())
         {
             cls();
-            System.out.println("Proximo jogador: \n\n\n\n\n\n" + player[currentPlayer].getName());
+            System.out.println("Proximo jogador: \n\n\n\n\n" + "–––––– " + player[currentPlayer].getName() + " ––––––\n");
             if(pauseOrQuit()) return;
 
 
@@ -423,7 +423,7 @@ public class Uno implements Serializable
     {
         cls();
         decorate();
-        System.out.println(player[currentPlayer].getName() + ", É seu turno\nA carta atual na mesa é:\n"+cardpile.peek());
+        System.out.println(player[currentPlayer].getName() + ", É seu turno!\n\nA carta atual na mesa é:\n"+cardpile.peek());
         decorate();
         showCards();
 	    decorate();
